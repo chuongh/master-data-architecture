@@ -144,43 +144,119 @@ body{
 }
 .src.confirmed{border-style:solid; border-color:var(--hair-soft); background:var(--surface)}
 .src svg{width:15px; height:15px; flex-shrink:0; color:var(--accent); opacity:.85}
-.src span{
-  font-size:11px; color:var(--muted); line-height:1.25;
+.src > span{min-width:0; display:block}
+.src > span > span{
+  display:block; font-size:11px; font-weight:500; color:var(--muted); line-height:1.25;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
-.src.confirmed span{color:var(--ink)}
+.src.confirmed > span > span{color:var(--ink); font-weight:600}
+.src small{
+  display:block; font-size:8.5px; color:var(--faint); letter-spacing:.06em;
+  text-transform:uppercase; font-weight:700; margin-top:1px;
+}
 
-/* --- flow divider --- */
-.flow{display:flex; align-items:center; gap:9px; margin:13px 0 2px}
+/* --- flow divider between tiers --- */
+.flow{display:flex; align-items:center; gap:9px; margin:9px 0 0}
 .flow i{flex:1; height:1px; background:var(--hair-soft)}
 .flow svg{width:13px; height:13px; color:var(--gray)}
 
-/* --- 2x2 platform slots --- */
-.slots{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:9px}
-.slot{
-  border:1px solid var(--hair-soft); border-radius:9px;
-  padding:9px 10px 10px; background:#FCFDFF; min-height:86px;
+/* --- readiness meter (card header) --- */
+.meter-wrap{margin-left:auto; display:flex; flex-direction:column; align-items:flex-end; gap:4px}
+.meter{display:flex; gap:3px}
+.meter i{width:17px; height:5px; border-radius:2px; background:#E3E8F1; display:block}
+.meter i.s-live{background:#55B497}
+.meter i.s-partial{background:#E4803A}
+.meter i.s-planned{background:var(--magenta)}
+.meter-label{
+  font-size:9.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+  white-space:nowrap;
 }
-.slot.is-empty{border-style:dashed; border-color:var(--hair); background:transparent}
-.slot h3{
-  font-size:9.5px; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
-  color:var(--faint); margin:0 0 8px;
+.owner-line{
+  font-size:10px; color:var(--faint); margin:5px 0 0 19px; line-height:1.4;
 }
-.slot.is-store h3{color:var(--accent)}
-.svcs{display:flex; flex-direction:column; gap:6px}
-.svc{display:flex; align-items:center; gap:7px; min-width:0}
-.svc img{width:20px; height:20px; border-radius:3px; flex-shrink:0}
-.svc span{
-  font-size:11px; font-weight:500; color:var(--ink); line-height:1.2;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+.owner-line b{color:var(--muted); font-weight:600}
+
+/* --- tier bands --- */
+.tier{
+  border-radius:10px; border:1px solid var(--hair-soft); background:#FCFDFF;
+  padding:11px 13px 12px; margin-top:9px;
 }
-.slot-empty{
-  display:flex; align-items:center; gap:6px;
-  font-size:10.5px; font-style:italic; color:var(--faint); line-height:1.35;
+.tier.s-live{background:rgba(85,180,151,.06); border-color:rgba(85,180,151,.34)}
+.tier.s-partial{background:rgba(228,128,58,.06); border-color:rgba(228,128,58,.38)}
+.tier.s-planned{background:transparent; border-color:rgba(207,44,145,.42); border-style:dashed}
+.tier.s-none,.tier.s-unknown{background:transparent; border-color:var(--hair); border-style:dashed}
+
+.tier-head{display:flex; align-items:center; gap:8px; margin-bottom:9px}
+.tier-num{
+  width:17px; height:17px; border-radius:50%; flex-shrink:0; color:#fff;
+  font-size:9.5px; font-weight:800; display:grid; place-items:center; background:var(--gray);
 }
-.slot-empty b{
-  font-style:normal; font-weight:800; color:var(--gray); font-size:12px;
+.tier.s-live .tier-num{background:#2F7F68}
+.tier.s-partial .tier-num{background:#B45F1F}
+.tier.s-planned .tier-num{background:var(--magenta)}
+.tier-title{
+  font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted);
 }
+.tier.s-live .tier-title,.tier.s-partial .tier-title{color:var(--ink)}
+.tier-status{
+  margin-left:auto; font-size:9px; font-weight:800; letter-spacing:.08em;
+  text-transform:uppercase; padding:3px 8px; border-radius:20px; white-space:nowrap;
+  background:#EEF1F6; color:var(--faint);
+}
+.tier.s-live .tier-status{background:rgba(85,180,151,.16); color:#2F7F68}
+.tier.s-partial .tier-status{background:rgba(228,128,58,.17); color:#B45F1F}
+.tier.s-planned .tier-status{background:rgba(207,44,145,.12); color:var(--magenta)}
+
+.asset{font-size:11.5px; font-weight:700; color:var(--ink); line-height:1.35; margin:0 0 2px}
+.asset em{font-style:normal; font-weight:500; color:var(--muted)}
+.tier-note{
+  margin:0 0 8px; font-size:10.5px; font-style:italic; color:var(--faint); line-height:1.45;
+}
+
+.svcs{display:flex; flex-wrap:wrap; gap:7px 14px; margin-top:8px}
+.svc{display:flex; align-items:center; gap:6px; min-width:0}
+.svc img{width:19px; height:19px; border-radius:3px; flex-shrink:0}
+.svc span{font-size:11px; font-weight:500; color:var(--ink); line-height:1.2; white-space:nowrap}
+
+.caps{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px}
+.cap{
+  font-size:9.5px; font-weight:600; color:var(--muted); background:var(--surface);
+  border:1px solid var(--hair-soft); border-radius:5px; padding:3px 7px; line-height:1.2;
+}
+.cap b{color:var(--ink); font-weight:700}
+
+.domains{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px}
+.domain{
+  font-size:9.5px; font-weight:700; letter-spacing:.03em; padding:3px 8px; border-radius:20px;
+  background:rgba(0,0,245,.06); color:var(--blue-deep); border:1px solid rgba(0,0,245,.14);
+}
+
+.products{margin-top:11px; padding-top:10px; border-top:1px dashed var(--hair)}
+.products h4{
+  font-size:9px; font-weight:800; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--magenta); margin:0 0 7px;
+}
+.products ul{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:5px 10px}
+.products li{
+  display:flex; align-items:flex-start; gap:6px; font-size:10.5px; color:var(--ink); line-height:1.3;
+}
+.products li svg{width:11px; height:11px; flex-shrink:0; margin-top:1.5px; color:var(--magenta)}
+
+.tier-empty{
+  display:flex; align-items:center; gap:7px;
+  font-size:10.5px; font-style:italic; color:var(--faint); line-height:1.4;
+}
+.tier-empty b{font-style:normal; font-weight:800; color:var(--gray); font-size:13px}
+
+.gap-flag{
+  display:flex; align-items:center; gap:7px; margin-top:9px;
+  background:rgba(207,44,145,.06); border:1px solid rgba(207,44,145,.28);
+  border-radius:8px; padding:7px 10px;
+}
+.gap-flag svg{width:13px; height:13px; flex-shrink:0; color:var(--magenta)}
+.gap-flag span{font-size:10.5px; color:var(--muted); line-height:1.4}
+.gap-flag b{color:var(--magenta); font-weight:700}
 
 /* --- placeholder entity --- */
 .node.is-placeholder{
@@ -305,6 +381,7 @@ body{
   <div class="bar-sep"></div>
   <div class="readout">
     <span>Entities mapped <b id="r-ent"></b></span>
+    <span>Lakehouse ready <b id="r-ready"></b></span>
     <span>Source systems <b class="warn" id="r-src"></b> confirmed</span>
     <span>Hub connections <b class="warn" id="r-link"></b> confirmed</span>
   </div>
@@ -350,7 +427,7 @@ const MODEL = {
   meta:{
     org:'Sovico Group',
     title:'Enterprise Data Platform — Connectivity Map',
-    subtitle:'Where data sits and how it moves across group entities today. This is the observed baseline the target architecture will be designed against.',
+    subtitle:'Where data sits today and how far each entity has carried it — source systems, then a data lake, then a lakehouse. This is the observed baseline the target architecture will be designed against.',
     state:'AS-IS',
     asOf:'As of August 2026'
   },
@@ -368,79 +445,170 @@ const MODEL = {
   entities:[
     {
       id:'vja', name:'VietJet Air', accent:'#E4803A', side:'left',
-      state:'lake', stateLabel:'Data lake',
-      sources:[
-        {label:'PSS / Reservation',    type:'oltp',   confirmed:false},
-        {label:'Departure control',    type:'oltp',   confirmed:false},
-        {label:'Loyalty programme',    type:'crm',    confirmed:false},
-        {label:'Web & app clickstream',type:'stream', confirmed:false},
-        {label:'Revenue accounting',   type:'erp',    confirmed:false}
-      ],
-      ingestion:[{key:'glue', label:'AWS Glue'}],
-      storage:{kind:'lake', services:[{key:'s3', label:'Open table format'}]},
-      governance:[{key:'lakeFormation',label:'AWS Lake Formation'},{key:'glueCatalog',label:'AWS Glue Data Catalog'}],
-      consumption:[],
+      owner:'Owner not surveyed',
+      tiers:{
+        sources:{
+          status:'unknown', owner:'Owner not surveyed',
+          items:[
+            {label:'PSS / Reservation',    kind:'Reservation', type:'oltp',   confirmed:false},
+            {label:'Departure control',    kind:'DCS',         type:'oltp',   confirmed:false},
+            {label:'Loyalty programme',    kind:'CRM',         type:'crm',    confirmed:false},
+            {label:'Web & app clickstream',kind:'Event',       type:'stream', confirmed:false},
+            {label:'Revenue accounting',   kind:'ERP',         type:'erp',    confirmed:false}
+          ]
+        },
+        lake:{
+          status:'live', owner:'Owner not surveyed',
+          asset:'Amazon S3 object storage',
+          note:'Inferred from the open table format named in the source deck. No zone, region or landing-layout detail available.',
+          services:[{key:'s3', label:'Amazon S3'}],
+          caps:[{k:'Ingestion', v:'AWS Glue'}]
+        },
+        lakehouse:{
+          status:'partial', owner:'Owner not surveyed',
+          asset:'Open table format + Glue Data Catalog',
+          note:'Catalog and permissions are in place, but no query engine is named — nothing consumes these tables yet.',
+          services:[{key:'s3',label:'Open table format'},{key:'lakeFormation',label:'AWS Lake Formation'},{key:'glueCatalog',label:'AWS Glue Data Catalog'}],
+          domains:[], products:[]
+        }
+      },
       link:{status:'unknown', label:'To confirm'}
     },
     {
       id:'vjc', name:'VietJet Cargo', accent:'#55B497', side:'left',
-      state:'partial', stateLabel:'Warehouse-led',
-      sources:[
-        {label:'Cargo booking',      type:'oltp', confirmed:false},
-        {label:'AWB / Manifest',     type:'file', confirmed:false},
-        {label:'Ground handling',    type:'oltp', confirmed:false},
-        {label:'Interline partners', type:'api',  confirmed:false}
-      ],
-      ingestion:[],
-      storage:{kind:'unknown', services:[]},
-      governance:[{key:'lakeFormation',label:'AWS Lake Formation'},{key:'glueCatalog',label:'AWS Glue Data Catalog'}],
-      consumption:[{key:'athena',label:'Amazon Athena'},{key:'redshift',label:'Amazon Redshift'},{key:'sagemakerStudio',label:'Amazon SageMaker'}],
+      owner:'Owner not surveyed',
+      tiers:{
+        sources:{
+          status:'unknown', owner:'Owner not surveyed',
+          items:[
+            {label:'Cargo booking',      kind:'OLTP',  type:'oltp', confirmed:false},
+            {label:'AWB / Manifest',     kind:'File',  type:'file', confirmed:false},
+            {label:'Ground handling',    kind:'OLTP',  type:'oltp', confirmed:false},
+            {label:'Interline partners', kind:'API',   type:'api',  confirmed:false}
+          ]
+        },
+        lake:{
+          status:'unknown', owner:'Owner not surveyed',
+          asset:null,
+          empty:'No object storage or lake named in the source deck.',
+          services:[], caps:[]
+        },
+        lakehouse:{
+          status:'partial', owner:'Owner not surveyed',
+          asset:'Lake Formation + Glue Data Catalog',
+          note:'Query and ML engines are in place, but nothing in the source names the storage they read from.',
+          services:[{key:'lakeFormation',label:'AWS Lake Formation'},{key:'glueCatalog',label:'AWS Glue Data Catalog'},{key:'athena',label:'Amazon Athena'},{key:'redshift',label:'Amazon Redshift'},{key:'sagemakerStudio',label:'Amazon SageMaker'}],
+          domains:[], products:[]
+        }
+      },
+      gap:'Engines without a lake — Athena, Redshift and SageMaker are running with no identified storage tier beneath them.',
       link:{status:'unknown', label:'To confirm'}
     },
     {
       id:'hds', name:'HDSaison', accent:'#0000F5', side:'right',
-      state:'lake', stateLabel:'Data lake',
-      sources:[
-        {label:'Core lending',        type:'oltp', confirmed:false},
-        {label:'Loan origination',    type:'oltp', confirmed:false},
-        {label:'Collection & recovery',type:'oltp',confirmed:false},
-        {label:'CRM / Customer 360',  type:'crm',  confirmed:false},
-        {label:'Credit bureau feed',  type:'file', confirmed:false}
-      ],
-      ingestion:[],
-      storage:{kind:'lake', services:[{key:'s3', label:'Open table format'}]},
-      governance:[{key:'lakeFormation',label:'AWS Lake Formation'},{key:'glueCatalog',label:'AWS Glue Data Catalog'}],
-      consumption:[{key:'athena',label:'Amazon Athena'},{key:'redshift',label:'Amazon Redshift'}],
+      owner:'Owner not surveyed',
+      tiers:{
+        sources:{
+          status:'unknown', owner:'Owner not surveyed',
+          items:[
+            {label:'Core lending',         kind:'OLTP', type:'oltp', confirmed:false},
+            {label:'Loan origination',     kind:'OLTP', type:'oltp', confirmed:false},
+            {label:'Collection & recovery',kind:'OLTP', type:'oltp', confirmed:false},
+            {label:'CRM / Customer 360',   kind:'CRM',  type:'crm',  confirmed:false},
+            {label:'Credit bureau feed',   kind:'File', type:'file', confirmed:false}
+          ]
+        },
+        lake:{
+          status:'live', owner:'Owner not surveyed',
+          asset:'Amazon S3 object storage',
+          note:'Ingestion mechanism is not named in the source deck — how data reaches the lake is unknown.',
+          services:[{key:'s3', label:'Amazon S3'}], caps:[]
+        },
+        lakehouse:{
+          status:'live', owner:'Owner not surveyed',
+          asset:'Open table format + Glue Data Catalog',
+          note:'Catalog, permissions and two query engines are in place. No data products named on top.',
+          services:[{key:'s3',label:'Open table format'},{key:'lakeFormation',label:'AWS Lake Formation'},{key:'glueCatalog',label:'AWS Glue Data Catalog'},{key:'athena',label:'Amazon Athena'},{key:'redshift',label:'Amazon Redshift'}],
+          domains:[], products:[]
+        }
+      },
       link:{status:'unknown', label:'To confirm'}
     },
     {
       id:'gal', name:'Galaxy', accent:'#BE3C8E', side:'right',
-      state:'db', stateLabel:'Database only',
-      sources:[
-        {label:'ERP',                type:'erp',  confirmed:false},
-        {label:'CRM',                type:'crm',  confirmed:false},
-        {label:'Ticketing / POS',    type:'oltp', confirmed:false},
-        {label:'Content metadata',   type:'file', confirmed:false}
-      ],
-      ingestion:[],
-      storage:{kind:'db', services:[{key:'rds', label:'Amazon RDS instance'}]},
-      governance:[{key:'lakeFormation',label:'AWS Lake Formation'},{key:'glueCatalog',label:'AWS Glue Data Catalog'}],
-      consumption:[],
+      owner:'Owner not surveyed',
+      tiers:{
+        sources:{
+          status:'unknown', owner:'Owner not surveyed',
+          items:[
+            {label:'ERP',              kind:'ERP',  type:'erp',  confirmed:false},
+            {label:'CRM',              kind:'CRM',  type:'crm',  confirmed:false},
+            {label:'Ticketing / POS',  kind:'OLTP', type:'oltp', confirmed:false},
+            {label:'Content metadata', kind:'File', type:'file', confirmed:false}
+          ]
+        },
+        lake:{
+          status:'none', owner:'Owner not surveyed',
+          asset:'Amazon RDS instance — relational, not a lake',
+          note:'The only storage named is a managed relational database. No object storage, no raw zone, no lake.',
+          services:[{key:'rds', label:'Amazon RDS instance'}], caps:[]
+        },
+        lakehouse:{
+          status:'partial', owner:'Owner not surveyed',
+          asset:'Lake Formation + Glue Data Catalog',
+          note:'Catalog and permissions are registered, but there is no lake beneath them and no query engine above.',
+          services:[{key:'lakeFormation',label:'AWS Lake Formation'},{key:'glueCatalog',label:'AWS Glue Data Catalog'}],
+          domains:[], products:[]
+        }
+      },
+      gap:'Catalog without a lake — governance services are registered over a relational database rather than lake storage.',
       link:{status:'unknown', label:'To confirm'}
     },
     {
-      id:'ph1', name:'Entity', side:'left', placeholder:true,
-      hint:'Add the next entity here — name, its source systems, and whether it already runs a lake or only a database.'
+      id:'vsc', name:'Victoria School', accent:'#7A4FBF', side:'left',
+      owner:'IT / Data Team · Head of Data / IT · Admin Team',
+      platform:'Victoria Enterprise Data Platform',
+      surveyed:true,
+      tiers:{
+        sources:{
+          status:'live', owner:'IT Team · App Owners · System Admins',
+          note:'Transactional application databases handling daily school operations, student enrolment, tuition transactions and CRM data.',
+          items:[
+            {label:'HubSpot',            kind:'CRM',    type:'crm',  confirmed:true},
+            {label:'PowerSchool',        kind:'SIS',    type:'oltp', confirmed:true},
+            {label:'Victoria Portal',    kind:'Portal', type:'api',  confirmed:true},
+            {label:'Dashboard Postgres', kind:'OLTP',   type:'oltp', confirmed:true}
+          ]
+        },
+        lake:{
+          status:'live', owner:'IT / Data Team · Data Engineering · AWS IAM / Data Ops',
+          asset:'AWS S3 Landing & RAW <em>— Hanoi Local Zone</em>',
+          note:'Raw source data preserved with lineage, supporting pipeline replay while enforcing PII boundaries.',
+          services:[{key:'s3', label:'Amazon S3'}],
+          caps:[{k:'Ingestion', v:'ECS'}, {k:'Security', v:'KMS / IAM'}]
+        },
+        lakehouse:{
+          status:'live', owner:'IT / Data Team · Lead Data Architect',
+          asset:'Victoria CORE & Business Marts',
+          note:'Standardised, pseudonymised crosswalk layer and aggregated domain marts serving business governance without storing direct PII.',
+          services:[{key:'glue',label:'AWS Glue'},{key:'athena',label:'Amazon Athena'},{key:'glueCatalog',label:'Glue Data Catalog'}],
+          caps:[{k:'Orchestration', v:'Airflow'}, {k:'Governance', v:'Glue / Athena'}],
+          domains:['Admissions','Enrollment','Tuition','Feedback'],
+          products:['BOD Executive Dashboard','Admissions Funnel','Enrollment Overview','Tuition Collection'],
+          productOwner:'Executive / Operations · BOD / Domain Leads · Dashboard Admin'
+        }
+      },
+      link:{status:'unknown', label:'To confirm'}
     },
     {
-      id:'ph2', name:'Entity', side:'right', placeholder:true,
-      hint:'Add the next entity here — name, its source systems, and whether it already runs a lake or only a database.'
+      id:'ph1', name:'Entity', side:'right', placeholder:true,
+      hint:'Add the next entity here — its source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
     }
   ]
 };
 
 /* ══════════════════════════════ CONSTANTS ══════════════════════════════ */
-const L = { pad:70, cardW:560, hubW:440, gapX:104, gapY:48, tail:230 };
+const L = { pad:70, cardW:610, hubW:440, gapX:104, gapY:48, tail:230 };
 
 const LINK_STYLE = {
   live:    {label:'Automated',    dash:null,     width:2.5, color:null},
@@ -469,13 +637,50 @@ const ico = (d, cls='') =>
 const svcRow = s =>
   `<div class="svc"><img src="${ASSETS[s.key]}" alt=""><span>${esc(s.label)}</span></div>`;
 
-function slot(title, items, opts = {}) {
-  const empty = !items || !items.length;
-  const cls = ['slot', empty ? 'is-empty' : '', opts.store ? 'is-store' : ''].filter(Boolean).join(' ');
-  const body = empty
-    ? `<div class="slot-empty"><b>?</b><span>${esc(opts.emptyText || 'Not identified')}</span></div>`
-    : `<div class="svcs">${items.map(svcRow).join('')}</div>`;
-  return `<div class="${cls}"><h3>${esc(title)}</h3>${body}</div>`;
+const TIER_LABEL = {
+  live:'Live', partial:'Partial', planned:'Planned',
+  none:'Not built', unknown:'Not surveyed'
+};
+
+/* Readiness ladder. Deliberately NOT a single cumulative score: a tier can be live
+   while the one below it is missing, and that inversion is the finding worth seeing,
+   so the meter shows each tier's own status and the label names the pattern. */
+function readiness(e) {
+  const lake = e.tiers.lake.status, lh = e.tiers.lakehouse.status;
+  const prods = (e.tiers.lakehouse.products || []).length;
+  if (lake === 'live' && lh === 'live' && prods) return {label:'Products live', tone:'live'};
+  if (lake === 'live' && lh === 'live')          return {label:'Lakehouse ready', tone:'live'};
+  if (lake === 'live')                            return {label:'Lake only', tone:'partial'};
+  if (lh === 'live' || lh === 'partial')          return {label:'Ladder gap', tone:'planned'};
+  return {label:'Sources only', tone:'none'};
+}
+
+const TONE_COLOR = {live:'#2F7F68', partial:'#B45F1F', planned:'#CF2C91', none:'#8A93A6'};
+
+/* `asset` may carry inline <em>; it is authored in MODEL, never user input, so it is
+   interpolated raw. Every other field goes through esc(). */
+function tier(n, title, t, extra = '') {
+  const st = t.status;
+  // `extra` counts as body content — the source-systems tier carries its chips there and
+  // has no asset or services of its own, so ignoring it would render a false empty state.
+  const hasBody = !!(t.asset || (t.services && t.services.length) || extra);
+  const note = t.note ? `<p class="tier-note">${esc(t.note)}</p>` : '';
+  const body = hasBody
+    ? `${t.asset ? `<p class="asset">${t.asset}</p>` : ''}${note}
+       ${t.services && t.services.length ? `<div class="svcs">${t.services.map(svcRow).join('')}</div>` : ''}
+       ${t.caps && t.caps.length ? `<div class="caps">${t.caps.map(c =>
+          `<span class="cap"><b>${esc(c.k)}</b> ${esc(c.v)}</span>`).join('')}</div>` : ''}`
+    : `${note}<div class="tier-empty"><b>?</b><span>${esc(t.empty || 'Nothing identified in the source')}</span></div>`;
+
+  return `<div class="tier s-${st}">
+    <div class="tier-head">
+      <span class="tier-num">${n}</span>
+      <span class="tier-title">${esc(title)}</span>
+      <span class="tier-status">${esc(TIER_LABEL[st])}</span>
+    </div>
+    ${body}${extra}
+    ${t.owner ? `<p class="owner-line" style="margin-left:0;margin-top:9px">Owner · <b>${esc(t.owner)}</b></p>` : ''}
+  </div>`;
 }
 
 /* ══════════════════════════════ RENDER ══════════════════════════════ */
@@ -502,37 +707,56 @@ function entityHTML(e) {
     </div>`;
   }
 
-  const chipCls = {lake:'chip-lake', db:'chip-db', partial:'chip-partial'}[e.state] || 'chip-none';
-  const storeTitle = {lake:'Storage — data lake', db:'Storage — database', unknown:'Storage'}[e.storage.kind];
-  const storeEmpty = e.storage.kind === 'unknown'
-    ? 'No lake or table format identified'
-    : 'Not identified';
+  const t = e.tiers;
+  const r = readiness(e);
+  const seg = s => `<i class="s-${s}"></i>`;
+  const nUnconfirmed = t.sources.items.filter(s => !s.confirmed).length;
 
-  const nUnconfirmed = e.sources.filter(s => !s.confirmed).length;
+  // data products hang off the lakehouse tier — the user-facing end of the ladder
+  const lh = t.lakehouse;
+  const productBlock = (lh.products && lh.products.length)
+    ? `<div class="products">
+         <h4>Data products · ${lh.products.length}</h4>
+         <ul>${lh.products.map(p => `<li>${ico(TICK)}<span>${esc(p)}</span></li>`).join('')}</ul>
+         ${lh.productOwner ? `<p class="owner-line" style="margin:8px 0 0">Product owner · <b>${esc(lh.productOwner)}</b></p>` : ''}
+       </div>`
+    : `<div class="products"><h4>Data products</h4>
+         <div class="tier-empty"><b>?</b><span>None named in the source</span></div></div>`;
+
+  const domainBlock = (lh.domains && lh.domains.length)
+    ? `<div class="domains">${lh.domains.map(d => `<span class="domain">${esc(d)}</span>`).join('')}</div>`
+    : '';
 
   return `<div class="node" data-id="${e.id}" style="--accent:${e.accent}">
     <div class="node-head">
       <span class="node-dot"></span>
       <h2>${esc(e.name)}</h2>
       <img class="aws-mark" src="${ASSETS.awsMark}" alt="AWS">
-      <span class="chip ${chipCls}">${esc(e.stateLabel)}</span>
+      <span class="meter-wrap">
+        <span class="meter">${seg(t.sources.status)}${seg(t.lake.status)}${seg(lh.status)}</span>
+        <span class="meter-label" style="color:${TONE_COLOR[r.tone]}">${esc(r.label)}</span>
+      </span>
     </div>
+    <p class="owner-line">${esc(e.owner)}${e.platform ? ` · <b>${esc(e.platform)}</b>` : ''}</p>
 
-    <p class="sec-label">Source systems — ${nUnconfirmed ? nUnconfirmed + ' to confirm' : 'all confirmed'}</p>
-    <div class="sources">
-      ${e.sources.map(s => `<div class="src${s.confirmed ? ' confirmed' : ''}">
-        ${ico(GLYPH[s.type] || GLYPH.oltp)}<span title="${esc(s.label)}">${esc(s.label)}</span>
-      </div>`).join('')}
-    </div>
+    ${tier(1, 'Source systems', t.sources, `
+      <div class="sources" style="margin-top:8px">
+        ${t.sources.items.map(s => `<div class="src${s.confirmed ? ' confirmed' : ''}">
+          ${ico(GLYPH[s.type] || GLYPH.oltp)}
+          <span><span title="${esc(s.label)}">${esc(s.label)}</span><small>${esc(s.kind)}</small></span>
+        </div>`).join('')}
+      </div>
+      <p class="tier-note" style="margin:9px 0 0">${
+        nUnconfirmed ? nUnconfirmed + ' of ' + t.sources.items.length + ' seeded by industry, not yet confirmed'
+                     : 'All ' + t.sources.items.length + ' confirmed from the entity’s own inventory'}</p>`)}
 
     <div class="flow"><i></i>${ico(CHEVRON)}<i></i></div>
+    ${tier(2, 'Data lake', t.lake)}
 
-    <div class="slots">
-      ${slot('Ingestion',  e.ingestion,   {emptyText:'No ingestion service identified'})}
-      ${slot(storeTitle,   e.storage.services, {store:true, emptyText:storeEmpty})}
-      ${slot('Catalog & governance', e.governance)}
-      ${slot('Consumption', e.consumption, {emptyText:'No consumption layer identified'})}
-    </div>
+    <div class="flow"><i></i>${ico(CHEVRON)}<i></i></div>
+    ${tier(3, 'Lakehouse', lh, domainBlock + productBlock)}
+
+    ${e.gap ? `<div class="gap-flag">${ico(CROSS)}<span><b>Ladder gap.</b> ${esc(e.gap)}</span></div>` : ''}
   </div>`;
 }
 
@@ -685,10 +909,12 @@ function drawEdges() {
 /* ══════════════════════════════ READOUT ══════════════════════════════ */
 function readout() {
   const real = MODEL.entities.filter(e => !e.placeholder);
-  const src  = real.flatMap(e => e.sources);
+  const src  = real.flatMap(e => e.tiers.sources.items);
   const ok   = src.filter(s => s.confirmed).length;
   const lk   = real.filter(e => e.link.status !== 'unknown').length;
+  const ready = real.filter(e => ['Lakehouse ready','Products live'].includes(readiness(e).label)).length;
   document.getElementById('r-ent').textContent  = `${real.length} of ${MODEL.entities.length}`;
+  document.getElementById('r-ready').textContent = `${ready} / ${real.length}`;
   document.getElementById('r-src').textContent  = `${ok} / ${src.length}`;
   document.getElementById('r-link').textContent = `${lk} / ${real.length}`;
 }
@@ -707,36 +933,47 @@ function legend() {
     ${line('#5B6478', '9 7', 'Manual / batch / one-way')}
     ${line('#CF2C91', '2 7', 'Does not exist yet')}
     ${line('#9AA6B8', '6 6', 'Not surveyed')}
-    <h4>Platform state</h4>
-    <div class="leg-row"><span class="chip chip-lake" style="margin:0">Data lake</span></div>
-    <div class="leg-row"><span class="chip chip-db" style="margin:0">Database only</span></div>
-    <div class="leg-row"><span class="chip chip-partial" style="margin:0">Warehouse-led</span></div>
+    <h4>The three tiers</h4>
+    <div class="leg-row"><span class="tier-num" style="background:#9AA6B8">1</span><span><b style="color:#1F2733">Source systems</b> — where data is created today</span></div>
+    <div class="leg-row"><span class="tier-num" style="background:#9AA6B8">2</span><span><b style="color:#1F2733">Data lake</b> — raw data landed in object storage</span></div>
+    <div class="leg-row"><span class="tier-num" style="background:#9AA6B8">3</span><span><b style="color:#1F2733">Lakehouse</b> — open table format, catalog, engines, products</span></div>
+    <h4>Tier readiness</h4>
+    ${["<span class='tier-status' style='background:rgba(85,180,151,.16);color:#2F7F68;margin:0'>Live</span>|Running in production",
+       "<span class='tier-status' style='background:rgba(228,128,58,.17);color:#B45F1F;margin:0'>Partial</span>|Exists but incomplete",
+       "<span class='tier-status' style='margin:0'>Not built</span>|Nothing of this tier exists",
+       "<span class='tier-status' style='margin:0'>Not surveyed</span>|Nothing named in the source"]
+      .map(x => { const [a,b] = x.split('|');
+        return `<div class="leg-row">${a}<span>${b}</span></div>`; }).join('')}
+    <h4>Readiness meter</h4>
+    <div class="leg-row"><span class="meter"><i class="s-live"></i><i class="s-live"></i><i class="s-live"></i></span><span>Three segments — one per tier, in order</span></div>
+    <div class="leg-row"><span class="meter"><i class="s-unknown"></i><i class="s-none"></i><i class="s-partial"></i></span><span>A filled upper segment over an empty lower one is a <b style="color:#CF2C91">ladder gap</b></span></div>
     <h4>Confidence</h4>
-    <div class="leg-row"><span style="display:inline-block;width:26px;height:14px;border:1px dashed #D6DCE7;border-radius:4px"></span><span>Dashed = seeded, to confirm</span></div>
+    <div class="leg-row"><span style="display:inline-block;width:26px;height:14px;border:1px dashed #D6DCE7;border-radius:4px"></span><span>Dashed chip = seeded, to confirm</span></div>
     <div class="leg-row"><b style="color:#9AA6B8;font-size:13px;width:26px;text-align:center">?</b><span>Nothing identified in the source</span></div>`;
 
   document.getElementById('band').innerHTML = `
     <div class="band-lede">
       <h4>How to read this map</h4>
-      <b>Only the governance plane is standard across the group today.</b>
+      <b>Only one entity has data all the way to a product. Two have a broken ladder.</b>
+    </div>
+    <div class="band-col">
+      <h5>The ladder</h5>
+      <p>Each card reads top to bottom: <b>source systems</b> → <b>data lake</b> →
+         <b>lakehouse</b>. The meter beside the entity name shows the state of each tier in that
+         order, so you can see where data stops moving.</p>
+    </div>
+    <div class="band-col">
+      <h5>Ladder gaps</h5>
+      <p>A tier can be live while the one below it is missing. <b>VietJet Cargo</b> runs Athena,
+         Redshift and SageMaker over no identified lake; <b>Galaxy</b> has a catalog registered over
+         a relational database. Those inversions are the finding, not a rendering fault.</p>
     </div>
     <div class="band-col">
       <h5>What is fact</h5>
-      <p>Entities, AWS services and the hub-and-spoke topology come from
-         <b>master-achitecture.pptx, slide 2</b>. Lake Formation and Glue Data Catalog are the only
-         two services present in <b>all four</b> entities.</p>
-    </div>
-    <div class="band-col">
-      <h5>What is seeded</h5>
-      <p>The slide names <b>no source systems at all</b>. Every system chip here is seeded by
-         industry and marked unconfirmed — they are prompts for the survey, not findings.
-         Overwrite them as answers come in.</p>
-    </div>
-    <div class="band-col">
-      <h5>What is unknown</h5>
-      <p>The slide's four arrows describe <b>target state</b>, so no spoke is drawn as live.
-         All four read <b>not surveyed</b> until someone confirms what runs today. Ingestion is
-         unidentified for three of four entities.</p>
+      <p><b>Victoria School</b> is drawn from its own inventory — tiers, owners and products are
+         confirmed. The other four come from <b>master-achitecture.pptx, slide 2</b>, which names
+         services but <b>no source systems</b>; those chips are seeded by industry and dashed until
+         surveyed. Tier assignment is our reading of that service list.</p>
     </div>`;
 }
 
