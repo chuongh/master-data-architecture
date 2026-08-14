@@ -163,6 +163,29 @@ extractable logic beyond layout. Verification is therefore visual and structural
    were real entities.
 5. Read the browser console — zero errors.
 
+## Publication
+
+Published 2026-08-14 to `chuongh/master-data-architecture`, served by GitHub Pages at
+<https://chuongh.github.io/master-data-architecture/>. The map is the repository root
+`index.html`.
+
+The repository was made **public**, which is a deliberate trade rather than an oversight: the
+account is on the free plan, where GitHub Pages is only available for public repositories.
+Upgrading would not have changed the exposure — a Pages site is publicly reachable regardless of
+repository visibility, and access-controlled Pages is an Enterprise Cloud feature.
+
+To limit reach, `index.html` carries `<meta name="robots" content="noindex, nofollow, noarchive,
+nosnippet">`. That tag is the mechanism that works. A `robots.txt` is committed as well, but for a
+project page it resolves under `/master-data-architecture/` and crawlers only read the domain root
+(`chuongh.github.io/robots.txt`, owned by a separate repository), so it has no effect today.
+
+**The residual exposure is real and should be understood by anyone extending this page:** the
+content is reachable by anyone holding the URL. It names four Sovico entities, states each one's
+data platform maturity, and asserts that only the governance plane is standardised group-wide.
+Before adding genuinely confidential material — real source system names, account IDs, volumes,
+vendor contracts — either move the repository back to private and share `index.html` as a file, or
+split the sensitive detail into a separate unpublished model.
+
 ## Known risks
 
 - **Seeded source systems could be mistaken for surveyed fact.** Mitigated by the dashed *to
