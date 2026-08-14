@@ -440,7 +440,7 @@ const MODEL = {
   meta:{
     org:'Sovico Group',
     title:'Enterprise Data Platform — Connectivity Map',
-    subtitle:'Where data sits today and how far each entity has carried it — source systems, then a data lake, then a lakehouse. This is the observed baseline the target architecture will be designed against.',
+    subtitle:'Where data sits today and how far each entity has carried it — source systems, then a data lake, then a lakehouse or warehouse. This is the observed baseline the target architecture will be designed against.',
     state:'AS-IS',
     asOf:'As of August 2026'
   },
@@ -608,7 +608,9 @@ const MODEL = {
           ]
         },
         lakehouse:{
-          status:'live', owner:'IT / Data Team · Lead Data Architect',
+          // tier 3 is named per entity — Victoria School runs a classic warehouse and
+          // mart layer here, not an open-table-format lakehouse
+          title:'Data Warehouse', status:'live', owner:'IT / Data Team · Lead Data Architect',
           asset:'Victoria CORE & Business Marts',
           note:'Standardised, pseudonymised crosswalk layer and aggregated domain marts serving business governance without storing direct PII.',
           domains:['Admissions','Enrollment','Tuition','Feedback'],
@@ -816,7 +818,7 @@ function entityHTML(e) {
     ${tier(2, 'Data lake', t.lake)}
 
     <div class="flow"><i></i>${ico(CHEVRON)}<i></i></div>
-    ${tier(3, 'Lakehouse', lh, domainBlock + productBlock)}
+    ${tier(3, lh.title || 'Lakehouse', lh, domainBlock + productBlock)}
 
     ${e.gap ? `<div class="gap-flag">${ico(CROSS)}<span><b>Ladder gap.</b> ${esc(e.gap)}</span></div>` : ''}
   </div>`;
@@ -998,7 +1000,7 @@ function legend() {
     <h4>The three tiers</h4>
     <div class="leg-row"><span class="tier-num" style="background:#9AA6B8">1</span><span><b style="color:#1F2733">Source systems</b> — where data is created today</span></div>
     <div class="leg-row"><span class="tier-num" style="background:#9AA6B8">2</span><span><b style="color:#1F2733">Data lake</b> — raw data landed in object storage</span></div>
-    <div class="leg-row"><span class="tier-num" style="background:#9AA6B8">3</span><span><b style="color:#1F2733">Lakehouse</b> — open table format, catalog, engines, products</span></div>
+    <div class="leg-row"><span class="tier-num" style="background:#9AA6B8">3</span><span><b style="color:#1F2733">Lakehouse</b> — modelled, governed, queryable, plus the products on top. Named <b style="color:#1F2733">Data Warehouse</b> where the entity runs one instead.</span></div>
     <h4>Tier readiness</h4>
     ${["<span class='tier-status' style='background:rgba(85,180,151,.16);color:#2F7F68;margin:0'>Live</span>|Running in production",
        "<span class='tier-status' style='background:rgba(0,0,245,.09);color:#0000F5;margin:0'>POC</span>|Built and running, not yet production",
@@ -1022,8 +1024,9 @@ function legend() {
     <div class="band-col">
       <h5>The ladder</h5>
       <p>Each card reads top to bottom: <b>source systems</b> → <b>data lake</b> →
-         <b>lakehouse</b>. The meter beside the entity name shows the state of each tier in that
-         order, so you can see where data stops moving.</p>
+         <b>lakehouse</b>, or <b>data warehouse</b> where the entity runs one instead. The meter
+         beside the entity name shows the state of each tier in that order, so you can see where
+         data stops moving.</p>
     </div>
     <div class="band-col">
       <h5>Ladder gaps</h5>
