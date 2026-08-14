@@ -501,12 +501,16 @@ const MODEL = {
           status:'live',
           items:[
             {label:'SmartKargo', kind:'Cargo management', type:'oltp', confirmed:true,
+             owner:'Nelson', admin:'Lê Minh Trí'},
+            // a copy of SmartKargo rather than a system of record, but it is where data
+            // sits today, so it belongs on the source tier — not in the empty lake tier
+            {label:'Microsoft SQL', kind:'Replica · some tables', type:'oltp', confirmed:true,
              owner:'Nelson', admin:'Lê Minh Trí'}
           ]
         },
         lake:{
           status:'none',
-          empty:'No lake of any kind — only a Microsoft SQL replica of some SmartKargo tables.'
+          empty:'No lake of any kind.'
         },
         lakehouse:{
           status:'none',
