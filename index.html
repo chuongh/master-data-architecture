@@ -135,26 +135,6 @@ body{
 }
 .sec-label:first-of-type{margin-top:13px}
 
-/* --- source system chips --- */
-.sources{display:grid; grid-template-columns:1fr 1fr; gap:6px}
-.src{
-  display:flex; align-items:center; gap:7px; min-width:0;
-  border:1px dashed var(--hair); border-radius:7px;
-  padding:6px 8px; background:#FCFDFF;
-}
-.src.confirmed{border-style:solid; border-color:var(--hair-soft); background:var(--surface)}
-.src svg{width:15px; height:15px; flex-shrink:0; color:var(--accent); opacity:.85}
-.src > span{min-width:0; display:block}
-.src > span > span{
-  display:block; font-size:11px; font-weight:500; color:var(--muted); line-height:1.25;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-}
-.src.confirmed > span > span{color:var(--ink); font-weight:600}
-.src small{
-  display:block; font-size:8.5px; color:var(--faint); letter-spacing:.06em;
-  text-transform:uppercase; font-weight:700; margin-top:1px;
-}
-
 /* --- flow divider between tiers --- */
 .flow{display:flex; align-items:center; gap:9px; margin:9px 0 0}
 .flow i{flex:1; height:1px; background:var(--hair-soft)}
@@ -208,6 +188,50 @@ body{
 .tier.s-partial .tier-status{background:rgba(228,128,58,.17); color:#B45F1F}
 .tier.s-planned .tier-status{background:rgba(207,44,145,.12); color:var(--magenta)}
 
+/* POC — exists and runs, but not production. Distinct from Partial (incomplete). */
+.tier.s-poc{background:rgba(0,0,245,.045); border-color:rgba(0,0,245,.26)}
+.tier.s-poc .tier-num{background:var(--blue-deep)}
+.tier.s-poc .tier-title{color:var(--ink)}
+.tier.s-poc .tier-status{background:rgba(0,0,245,.09); color:var(--blue-deep)}
+.meter i.s-poc{background:var(--blue-deep)}
+
+/* --- panels: one box per system / capability / product --- */
+.panels{display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:9px}
+.panel{
+  border:1px solid var(--hair-soft); border-radius:8px; background:var(--surface);
+  padding:8px 10px 9px; min-width:0;
+}
+.panel.is-unconfirmed{border-style:dashed; border-color:var(--hair); background:#FCFDFF}
+.panel-top{display:flex; align-items:center; gap:8px; min-width:0}
+.panel-ico{display:flex; gap:3px; flex-shrink:0}
+.panel-ico img,.panel-ico svg{width:20px; height:20px; border-radius:3px; display:block}
+.panel-ico .glyph{
+  width:20px; height:20px; border-radius:5px; border:1px solid var(--hair-soft);
+  padding:2px; color:var(--accent); background:#FCFDFF;
+}
+.panel-txt{min-width:0}
+.panel-val{
+  font-size:11px; font-weight:700; color:var(--ink); line-height:1.25;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.panel.is-unconfirmed .panel-val{font-weight:600; color:var(--muted)}
+.panel-role{
+  font-size:8.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--faint); margin-top:1px;
+}
+.panel-meta{margin-top:8px; padding-top:7px; border-top:1px solid var(--hair-soft)}
+.panel-meta p{display:flex; gap:7px; margin:0 0 2px; font-size:9.5px; line-height:1.35}
+.panel-meta p:last-child{margin-bottom:0}
+.panel-meta b{
+  color:var(--faint); font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+  width:44px; flex-shrink:0; white-space:nowrap;
+}
+.panel-meta span{
+  color:var(--muted); font-weight:600; min-width:0;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.panel-meta span.unset{color:var(--faint); font-weight:500; font-style:italic}
+
 .asset{font-size:11.5px; font-weight:700; color:var(--ink); line-height:1.35; margin:0 0 2px}
 .asset em{font-style:normal; font-weight:500; color:var(--muted)}
 .tier-note{
@@ -218,13 +242,6 @@ body{
 .svc{display:flex; align-items:center; gap:6px; min-width:0}
 .svc img{width:19px; height:19px; border-radius:3px; flex-shrink:0}
 .svc span{font-size:11px; font-weight:500; color:var(--ink); line-height:1.2; white-space:nowrap}
-
-.caps{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px}
-.cap{
-  font-size:9.5px; font-weight:600; color:var(--muted); background:var(--surface);
-  border:1px solid var(--hair-soft); border-radius:5px; padding:3px 7px; line-height:1.2;
-}
-.cap b{color:var(--ink); font-weight:700}
 
 .domains{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px}
 .domain{
@@ -237,11 +254,7 @@ body{
   font-size:9px; font-weight:800; letter-spacing:.13em; text-transform:uppercase;
   color:var(--magenta); margin:0 0 7px;
 }
-.products ul{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:5px 10px}
-.products li{
-  display:flex; align-items:flex-start; gap:6px; font-size:10.5px; color:var(--ink); line-height:1.3;
-}
-.products li svg{width:11px; height:11px; flex-shrink:0; margin-top:1.5px; color:var(--magenta)}
+.products .panels{margin-top:0}
 
 .tier-empty{
   display:flex; align-items:center; gap:7px;
@@ -448,7 +461,7 @@ const MODEL = {
       owner:'Owner not surveyed',
       tiers:{
         sources:{
-          status:'unknown', owner:'Owner not surveyed',
+          status:'unknown',
           items:[
             {label:'PSS / Reservation',    kind:'Reservation', type:'oltp',   confirmed:false},
             {label:'Departure control',    kind:'DCS',         type:'oltp',   confirmed:false},
@@ -461,8 +474,10 @@ const MODEL = {
           status:'live', owner:'Owner not surveyed',
           asset:'Amazon S3 object storage',
           note:'Inferred from the open table format named in the source deck. No zone, region or landing-layout detail available.',
-          services:[{key:'s3', label:'Amazon S3'}],
-          caps:[{k:'Ingestion', v:'AWS Glue'}]
+          panels:[
+            {role:'Ingestion', value:'AWS Glue',  icons:['glue']},
+            {role:'Storage',   value:'Amazon S3', icons:['s3']}
+          ]
         },
         lakehouse:{
           status:'partial', owner:'Owner not surveyed',
@@ -479,7 +494,7 @@ const MODEL = {
       owner:'Owner not surveyed',
       tiers:{
         sources:{
-          status:'unknown', owner:'Owner not surveyed',
+          status:'unknown',
           items:[
             {label:'Cargo booking',      kind:'OLTP',  type:'oltp', confirmed:false},
             {label:'AWB / Manifest',     kind:'File',  type:'file', confirmed:false},
@@ -509,7 +524,7 @@ const MODEL = {
       owner:'Owner not surveyed',
       tiers:{
         sources:{
-          status:'unknown', owner:'Owner not surveyed',
+          status:'unknown',
           items:[
             {label:'Core lending',         kind:'OLTP', type:'oltp', confirmed:false},
             {label:'Loan origination',     kind:'OLTP', type:'oltp', confirmed:false},
@@ -522,7 +537,7 @@ const MODEL = {
           status:'live', owner:'Owner not surveyed',
           asset:'Amazon S3 object storage',
           note:'Ingestion mechanism is not named in the source deck — how data reaches the lake is unknown.',
-          services:[{key:'s3', label:'Amazon S3'}], caps:[]
+          panels:[{role:'Storage', value:'Amazon S3', icons:['s3']}]
         },
         lakehouse:{
           status:'live', owner:'Owner not surveyed',
@@ -539,7 +554,7 @@ const MODEL = {
       owner:'Owner not surveyed',
       tiers:{
         sources:{
-          status:'unknown', owner:'Owner not surveyed',
+          status:'unknown',
           items:[
             {label:'ERP',              kind:'ERP',  type:'erp',  confirmed:false},
             {label:'CRM',              kind:'CRM',  type:'crm',  confirmed:false},
@@ -551,7 +566,7 @@ const MODEL = {
           status:'none', owner:'Owner not surveyed',
           asset:'Amazon RDS instance — relational, not a lake',
           note:'The only storage named is a managed relational database. No object storage, no raw zone, no lake.',
-          services:[{key:'rds', label:'Amazon RDS instance'}], caps:[]
+          panels:[{role:'Database', value:'Amazon RDS instance', icons:['rds']}]
         },
         lakehouse:{
           status:'partial', owner:'Owner not surveyed',
@@ -571,30 +586,38 @@ const MODEL = {
       surveyed:true,
       tiers:{
         sources:{
-          status:'live', owner:'IT Team · App Owners · System Admins',
+          status:'live',
           note:'Transactional application databases handling daily school operations, student enrolment, tuition transactions and CRM data.',
           items:[
-            {label:'HubSpot',            kind:'CRM',    type:'crm',  confirmed:true},
-            {label:'PowerSchool',        kind:'SIS',    type:'oltp', confirmed:true},
-            {label:'Victoria Portal',    kind:'Portal', type:'api',  confirmed:true},
-            {label:'Dashboard Postgres', kind:'OLTP',   type:'oltp', confirmed:true}
+            {label:'HubSpot',            kind:'CRM',    type:'crm',  confirmed:true, owner:'App Owners', admin:'System Admins'},
+            {label:'PowerSchool',        kind:'SIS',    type:'oltp', confirmed:true, owner:'App Owners', admin:'System Admins'},
+            {label:'Victoria Portal',    kind:'Portal', type:'api',  confirmed:true, owner:'App Owners', admin:'System Admins'},
+            {label:'Dashboard Postgres', kind:'OLTP',   type:'oltp', confirmed:true, owner:'App Owners', admin:'System Admins'}
           ]
         },
         lake:{
-          status:'live', owner:'IT / Data Team · Data Engineering · AWS IAM / Data Ops',
+          status:'poc', owner:'IT / Data Team · Data Engineering · AWS IAM / Data Ops',
           asset:'AWS S3 Landing & RAW <em>— Hanoi Local Zone</em>',
           note:'Raw source data preserved with lineage, supporting pipeline replay while enforcing PII boundaries.',
-          services:[{key:'s3', label:'Amazon S3'}],
-          caps:[{k:'Ingestion', v:'ECS'}, {k:'Security', v:'KMS / IAM'}]
+          panels:[
+            {role:'Ingestion',     value:'Amazon ECS',      tiles:['ecs']},
+            {role:'Storage',       value:'Amazon S3',       icons:['s3']},
+            {role:'Governance',    value:'Glue · Athena',   icons:['glue','athena']},
+            {role:'Orchestration', value:'Apache Airflow',  tiles:['airflow']},
+            {role:'Security',      value:'AWS KMS · IAM',   tiles:['kms']}
+          ]
         },
         lakehouse:{
           status:'live', owner:'IT / Data Team · Lead Data Architect',
           asset:'Victoria CORE & Business Marts',
           note:'Standardised, pseudonymised crosswalk layer and aggregated domain marts serving business governance without storing direct PII.',
-          services:[{key:'glue',label:'AWS Glue'},{key:'athena',label:'Amazon Athena'},{key:'glueCatalog',label:'Glue Data Catalog'}],
-          caps:[{k:'Orchestration', v:'Airflow'}, {k:'Governance', v:'Glue / Athena'}],
           domains:['Admissions','Enrollment','Tuition','Feedback'],
-          products:['BOD Executive Dashboard','Admissions Funnel','Enrollment Overview','Tuition Collection'],
+          products:[
+            {label:'BOD Executive Dashboard', kind:'Executive dashboard'},
+            {label:'Admissions Funnel',       kind:'KPI report'},
+            {label:'Enrollment Overview',     kind:'KPI report'},
+            {label:'Tuition Collection',      kind:'KPI report'}
+          ],
           productOwner:'Executive / Operations · BOD / Domain Leads · Dashboard Admin'
         }
       },
@@ -637,40 +660,87 @@ const ico = (d, cls='') =>
 const svcRow = s =>
   `<div class="svc"><img src="${ASSETS[s.key]}" alt=""><span>${esc(s.label)}</span></div>`;
 
+/* AWS icon tiles for services the source pptx did not ship an icon for.
+   Drawn in the official AWS category colours so they sit beside the real ones:
+   containers/compute orange, application-integration pink, security red. */
+const TILE = {
+  ecs:     {c:'#ED7100', inner:'<path d="M12 4.4l6.2 3.3v6.6L12 17.6l-6.2-3.3V7.7L12 4.4z"/><path d="M5.8 7.7L12 11l6.2-3.3M12 11v6.6"/>'},
+  airflow: {c:'#E7157B', inner:'<circle cx="6.6" cy="7.4" r="1.7"/><circle cx="17.4" cy="7.4" r="1.7"/><circle cx="12" cy="16.6" r="1.7"/><path d="M8.3 7.4h7.4M7.6 9l3.5 6M16.4 9l-3.5 6"/>'},
+  kms:     {c:'#DD344C', inner:'<path d="M8.5 10.6V8.5a3.5 3.5 0 017 0v2.1"/><rect x="6.5" y="10.6" width="11" height="7" rx="1.4"/><path d="M12 13.1v2"/>'},
+  product: {c:'#CF2C91', inner:'<path d="M5.5 18.5h13M8 18.5v-5M12 18.5V6.5M16 18.5v-8"/>'}
+};
+const tile = k => `<svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="3.5" fill="${TILE[k].c}"/>
+  <g fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${TILE[k].inner}</g></svg>`;
+
+const panelIcons = p => `<span class="panel-ico">${
+  (p.icons || []).map(k => `<img src="${ASSETS[k]}" alt="">`).join('') +
+  (p.tiles || []).map(tile).join('')}</span>`;
+
+/* One box per capability or product: icon, the role it plays, the service behind it. */
+const capPanel = p => `<div class="panel">
+  <div class="panel-top">${panelIcons(p)}
+    <div class="panel-txt">
+      <div class="panel-val" title="${esc(p.value)}">${esc(p.value)}</div>
+      <div class="panel-role">${esc(p.role)}</div>
+    </div>
+  </div>
+</div>`;
+
+/* Source systems carry their own owner and admin — they differ system by system. */
+const srcPanel = s => `<div class="panel panel-src${s.confirmed ? '' : ' is-unconfirmed'}">
+  <div class="panel-top">
+    <span class="panel-ico">${ico(GLYPH[s.type] || GLYPH.oltp, 'glyph')}</span>
+    <div class="panel-txt">
+      <div class="panel-val" title="${esc(s.label)}">${esc(s.label)}</div>
+      <div class="panel-role">${esc(s.kind)}</div>
+    </div>
+  </div>
+  <div class="panel-meta">
+    <p><b>Owner</b><span class="${s.owner ? '' : 'unset'}" title="${esc(s.owner || '')}">${esc(s.owner || 'To confirm')}</span></p>
+    <p><b>Admin</b><span class="${s.admin ? '' : 'unset'}" title="${esc(s.admin || '')}">${esc(s.admin || 'To confirm')}</span></p>
+  </div>
+</div>`;
+
 const TIER_LABEL = {
-  live:'Live', partial:'Partial', planned:'Planned',
+  live:'Live', poc:'POC', partial:'Partial', planned:'Planned',
   none:'Not built', unknown:'Not surveyed'
 };
+
+/* How far a tier has actually got: 2 = in production, 1 = running but not production
+   (POC) or incomplete, 0 = nothing there. */
+const RANK = {live:2, poc:1, partial:1, planned:0, none:0, unknown:0};
 
 /* Readiness ladder. Deliberately NOT a single cumulative score: a tier can be live
    while the one below it is missing, and that inversion is the finding worth seeing,
    so the meter shows each tier's own status and the label names the pattern. */
 function readiness(e) {
-  const lake = e.tiers.lake.status, lh = e.tiers.lakehouse.status;
+  const lake = RANK[e.tiers.lake.status], lh = RANK[e.tiers.lakehouse.status];
   const prods = (e.tiers.lakehouse.products || []).length;
-  if (lake === 'live' && lh === 'live' && prods) return {label:'Products live', tone:'live'};
-  if (lake === 'live' && lh === 'live')          return {label:'Lakehouse ready', tone:'live'};
-  if (lake === 'live')                            return {label:'Lake only', tone:'partial'};
-  if (lh === 'live' || lh === 'partial')          return {label:'Ladder gap', tone:'planned'};
+  if (lake === 0 && lh > 0)                return {label:'Ladder gap', tone:'planned'};
+  if (lake === 2 && lh === 2 && prods)     return {label:'Products live', tone:'live'};
+  if (lake >= 1 && lh >= 1 && prods)       return {label:'Products on POC lake', tone:'poc'};
+  if (lake === 2 && lh === 2)              return {label:'Lakehouse ready', tone:'live'};
+  if (lake >= 1 && lh >= 1)                return {label:'Lakehouse in progress', tone:'partial'};
+  if (lake >= 1)                           return {label:'Lake only', tone:'partial'};
   return {label:'Sources only', tone:'none'};
 }
 
-const TONE_COLOR = {live:'#2F7F68', partial:'#B45F1F', planned:'#CF2C91', none:'#8A93A6'};
+const TONE_COLOR = {live:'#2F7F68', poc:'#0000F5', partial:'#B45F1F', planned:'#CF2C91', none:'#8A93A6'};
 
 /* `asset` may carry inline <em>; it is authored in MODEL, never user input, so it is
    interpolated raw. Every other field goes through esc(). */
 function tier(n, title, t, extra = '') {
   const st = t.status;
-  // `extra` counts as body content — the source-systems tier carries its chips there and
+  // `extra` counts as body content — the source-systems tier carries its panels there and
   // has no asset or services of its own, so ignoring it would render a false empty state.
-  const hasBody = !!(t.asset || (t.services && t.services.length) || extra);
+  const hasBody = !!(t.asset || (t.services && t.services.length) ||
+                     (t.panels && t.panels.length) || extra);
   const note = t.note ? `<p class="tier-note">${esc(t.note)}</p>` : '';
   const body = hasBody
     ? `${t.asset ? `<p class="asset">${t.asset}</p>` : ''}${note}
        ${t.services && t.services.length ? `<div class="svcs">${t.services.map(svcRow).join('')}</div>` : ''}
-       ${t.caps && t.caps.length ? `<div class="caps">${t.caps.map(c =>
-          `<span class="cap"><b>${esc(c.k)}</b> ${esc(c.v)}</span>`).join('')}</div>` : ''}`
-    : `${note}<div class="tier-empty"><b>?</b><span>${esc(t.empty || 'Nothing identified in the source')}</span></div>`;
+       ${t.panels && t.panels.length ? `<div class="panels">${t.panels.map(capPanel).join('')}</div>` : ''}`
+    : `${note}${t.empty ? `<div class="tier-empty"><b>?</b><span>${esc(t.empty)}</span></div>` : ''}`;
 
   return `<div class="tier s-${st}">
     <div class="tier-head">
@@ -710,15 +780,15 @@ function entityHTML(e) {
   const t = e.tiers;
   const r = readiness(e);
   const seg = s => `<i class="s-${s}"></i>`;
-  const nUnconfirmed = t.sources.items.filter(s => !s.confirmed).length;
 
   // data products hang off the lakehouse tier — the user-facing end of the ladder
   const lh = t.lakehouse;
   const productBlock = (lh.products && lh.products.length)
     ? `<div class="products">
          <h4>Data products · ${lh.products.length}</h4>
-         <ul>${lh.products.map(p => `<li>${ico(TICK)}<span>${esc(p)}</span></li>`).join('')}</ul>
-         ${lh.productOwner ? `<p class="owner-line" style="margin:8px 0 0">Product owner · <b>${esc(lh.productOwner)}</b></p>` : ''}
+         <div class="panels">${lh.products.map(p =>
+           capPanel({role:p.kind || 'Data product', value:p.label || p, tiles:['product']})).join('')}</div>
+         ${lh.productOwner ? `<p class="owner-line" style="margin:9px 0 0">Product owner · <b>${esc(lh.productOwner)}</b></p>` : ''}
        </div>`
     : `<div class="products"><h4>Data products</h4>
          <div class="tier-empty"><b>?</b><span>None named in the source</span></div></div>`;
@@ -739,16 +809,8 @@ function entityHTML(e) {
     </div>
     <p class="owner-line">${esc(e.owner)}${e.platform ? ` · <b>${esc(e.platform)}</b>` : ''}</p>
 
-    ${tier(1, 'Source systems', t.sources, `
-      <div class="sources" style="margin-top:8px">
-        ${t.sources.items.map(s => `<div class="src${s.confirmed ? ' confirmed' : ''}">
-          ${ico(GLYPH[s.type] || GLYPH.oltp)}
-          <span><span title="${esc(s.label)}">${esc(s.label)}</span><small>${esc(s.kind)}</small></span>
-        </div>`).join('')}
-      </div>
-      <p class="tier-note" style="margin:9px 0 0">${
-        nUnconfirmed ? nUnconfirmed + ' of ' + t.sources.items.length + ' seeded by industry, not yet confirmed'
-                     : 'All ' + t.sources.items.length + ' confirmed from the entity’s own inventory'}</p>`)}
+    ${tier(1, 'Source systems', t.sources,
+      `<div class="panels">${t.sources.items.map(srcPanel).join('')}</div>`)}
 
     <div class="flow"><i></i>${ico(CHEVRON)}<i></i></div>
     ${tier(2, 'Data lake', t.lake)}
@@ -939,6 +1001,7 @@ function legend() {
     <div class="leg-row"><span class="tier-num" style="background:#9AA6B8">3</span><span><b style="color:#1F2733">Lakehouse</b> — open table format, catalog, engines, products</span></div>
     <h4>Tier readiness</h4>
     ${["<span class='tier-status' style='background:rgba(85,180,151,.16);color:#2F7F68;margin:0'>Live</span>|Running in production",
+       "<span class='tier-status' style='background:rgba(0,0,245,.09);color:#0000F5;margin:0'>POC</span>|Built and running, not yet production",
        "<span class='tier-status' style='background:rgba(228,128,58,.17);color:#B45F1F;margin:0'>Partial</span>|Exists but incomplete",
        "<span class='tier-status' style='margin:0'>Not built</span>|Nothing of this tier exists",
        "<span class='tier-status' style='margin:0'>Not surveyed</span>|Nothing named in the source"]
@@ -948,8 +1011,8 @@ function legend() {
     <div class="leg-row"><span class="meter"><i class="s-live"></i><i class="s-live"></i><i class="s-live"></i></span><span>Three segments — one per tier, in order</span></div>
     <div class="leg-row"><span class="meter"><i class="s-unknown"></i><i class="s-none"></i><i class="s-partial"></i></span><span>A filled upper segment over an empty lower one is a <b style="color:#CF2C91">ladder gap</b></span></div>
     <h4>Confidence</h4>
-    <div class="leg-row"><span style="display:inline-block;width:26px;height:14px;border:1px dashed #D6DCE7;border-radius:4px"></span><span>Dashed chip = seeded, to confirm</span></div>
-    <div class="leg-row"><b style="color:#9AA6B8;font-size:13px;width:26px;text-align:center">?</b><span>Nothing identified in the source</span></div>`;
+    <div class="leg-row"><span style="display:inline-block;width:26px;height:14px;border:1px dashed #D6DCE7;border-radius:4px"></span><span>Dashed panel = seeded, to confirm</span></div>
+    <div class="leg-row"><b style="color:#9AA6B8;font-size:13px;width:26px;text-align:center">?</b><span>Marks a tier with nothing behind it</span></div>`;
 
   document.getElementById('band').innerHTML = `
     <div class="band-lede">

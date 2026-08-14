@@ -104,21 +104,43 @@ through, so the card answers *where is the data and how far has it got*:
 4. **③ Lakehouse** — open table format, catalog, governance, query engines, business domains, and
    the **data products** hanging off the end.
 
-Each tier band carries its own status — `Live` · `Partial` · `Planned` · `Not built` ·
-`Not surveyed` — rendered as a tinted band (teal / amber) or a dashed outline, and its own owner
-line. A tier with nothing in it shows `?` and the reason.
+Each tier band carries its own status — `Live` · `POC` · `Partial` · `Planned` · `Not built` ·
+`Not surveyed` — rendered as a tinted band (teal / blue / amber) or a dashed outline, and its own
+owner line. A tier with nothing in it shows `?` and the reason.
+
+`POC` is distinct from `Partial`: POC means the tier is built and running but not production;
+Partial means it is production but incomplete. Victoria School's lake is POC.
+
+Everything inside a tier is a **panel** — a box with an icon, the role it plays, and the service
+behind it. Three kinds:
+
+- **Source system panels** carry their own **owner and admin**, because ownership differs system by
+  system; a layer-level owner would hide that.
+- **Capability panels** in the lake tier: Ingestion, Storage, Governance, Orchestration, Security.
+- **Product panels** at the end of the lakehouse tier.
+
+Four services in Victoria School's platform have no icon in the source pptx — ECS, Airflow, KMS and
+IAM. They are drawn as tiles in the official AWS category colours (containers orange `ED7100`,
+application integration pink `E7157B`, security red `DD344C`) so they sit beside the real icons
+without looking foreign.
 
 **The meter is deliberately not one cumulative score.** A tier can be live while the tier below it
 is empty, and that inversion is the most valuable thing on the page. The header label names the
 pattern instead of averaging it away:
 
+Each status has a rank: `live` = 2, `poc` and `partial` = 1, everything else = 0.
+
 | Condition | Label |
 |---|---|
-| lake live + lakehouse live + products | `Products live` |
-| lake live + lakehouse live | `Lakehouse ready` |
-| lake live only | `Lake only` |
-| lakehouse live or partial **without** a live lake | `Ladder gap` |
+| lake rank 0, lakehouse rank > 0 | `Ladder gap` |
+| lake 2 + lakehouse 2 + products | `Products live` |
+| lake ≥ 1 + lakehouse ≥ 1 + products | `Products on POC lake` |
+| lake 2 + lakehouse 2 | `Lakehouse ready` |
+| lake ≥ 1 + lakehouse ≥ 1 | `Lakehouse in progress` |
+| lake ≥ 1 | `Lake only` |
 | otherwise | `Sources only` |
+
+The gap test comes first deliberately: an upper tier standing on nothing outranks any other reading.
 
 A `Ladder gap` card also renders an explicit magenta flag naming the inversion. Two entities hit it:
 VietJet Cargo runs Athena, Redshift and SageMaker with no identified lake beneath them; Galaxy has
