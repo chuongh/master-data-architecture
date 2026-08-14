@@ -262,39 +262,8 @@ body{
 }
 .tier-empty b{font-style:normal; font-weight:800; color:var(--gray); font-size:13px}
 
-/* --- stand-in: something occupies the tier's place without being the tier --- */
-.standin{
-  border:1px dashed rgba(228,128,58,.55); border-radius:9px;
-  background:rgba(228,128,58,.05); padding:10px 11px 11px; margin-top:9px;
-}
-.standin-tag{
-  display:flex; align-items:center; gap:6px; margin-bottom:8px;
-  font-size:8.5px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; color:#B45F1F;
-}
-.standin-tag svg{width:12px; height:12px; flex-shrink:0}
-.standin .panel{border-color:rgba(228,128,58,.32)}
-.standin-note{margin:9px 0 0; font-size:10.5px; color:var(--muted); line-height:1.5}
-
-/* --- what the tier would need in order to exist --- */
-.missing{display:flex; flex-wrap:wrap; gap:5px; align-items:center; margin-top:10px}
-.missing-label{
-  font-size:8.5px; font-weight:800; letter-spacing:.11em; text-transform:uppercase;
-  color:var(--magenta); margin-right:2px;
-}
-.miss{
-  font-size:9.5px; font-weight:600; color:var(--muted); line-height:1.2;
-  background:rgba(207,44,145,.05); border:1px solid rgba(207,44,145,.22);
-  border-radius:5px; padding:3px 7px;
-}
-
-/* --- a claim in the source deck the entity's own inventory contradicts --- */
-.contradiction{
-  display:flex; gap:7px; margin-top:10px; padding:8px 10px;
-  background:rgba(0,0,245,.04); border:1px solid rgba(0,0,245,.18); border-radius:8px;
-}
-.contradiction svg{width:13px; height:13px; flex-shrink:0; color:var(--blue-deep); margin-top:1px}
-.contradiction p{margin:0; font-size:10.5px; color:var(--muted); line-height:1.5}
-.contradiction b{color:var(--blue-deep); font-weight:700}
+/* A tier that does not exist: one line, nothing else. */
+.tier-none{margin:0; font-size:11px; font-style:italic; color:var(--muted); line-height:1.5}
 
 .gap-flag{
   display:flex; align-items:center; gap:7px; margin-top:9px;
@@ -526,7 +495,6 @@ const MODEL = {
     {
       id:'vjc', name:'VietJet Cargo', accent:'#55B497', side:'left',
       owner:'ICT · Nelson · Lê Minh Trí',
-      platform:'Replication only — no platform beyond it',
       surveyed:true,
       tiers:{
         sources:{
@@ -537,21 +505,12 @@ const MODEL = {
           ]
         },
         lake:{
-          status:'none', owner:'ICT · Nelson · Lê Minh Trí',
-          note:'No lake of any kind. What exists is a database-to-database copy of part of the source.',
-          standin:{
-            role:'Replication · some tables only',
-            value:'Microsoft SQL',
-            tiles:['mssql'],
-            note:'Selected SmartKargo tables are replicated into a Microsoft SQL database. That is a copy, not a lake: coverage is partial, and there is no raw zone, no history, no lineage and no replay.'
-          },
-          missing:['Raw landing zone','Full source coverage','History','Lineage','Replay','PII boundaries']
+          status:'none',
+          empty:'No lake of any kind — only a Microsoft SQL replica of some SmartKargo tables.'
         },
         lakehouse:{
           status:'none',
-          empty:'Nothing modelled on top of the replica. No catalog, no query engine, no marts, no data products.',
-          missing:['Governed tables','Catalog','Query engine','Business marts','Data products'],
-          contradiction:'Slide 2 shows Athena, Redshift, SageMaker, Lake Formation and Glue Data Catalog for this entity. The entity’s own inventory shows none of them — the deck was describing target state, not what runs today.',
+          empty:'Nothing modelled on top.',
           domains:[], products:[]
         }
       },
@@ -601,15 +560,8 @@ const MODEL = {
           ]
         },
         lake:{
-          status:'none', owner:'Owner not surveyed',
-          note:'No lake. The only storage the source deck names for this entity is a managed relational database.',
-          standin:{
-            role:'Relational database',
-            value:'Amazon RDS instance',
-            icons:['rds'],
-            note:'An RDS instance holds the data. It is an operational database, not a lake: no object storage, no raw zone, and nothing the catalog above it can usefully govern.'
-          },
-          missing:['Object storage','Raw landing zone','Open table format','Lineage']
+          status:'none',
+          empty:'No lake — only an Amazon RDS instance, which is an operational database.'
         },
         lakehouse:{
           status:'partial', owner:'Owner not surveyed',
@@ -694,8 +646,6 @@ const GLYPH = {
   stream:'M3 8.5c3 0 3 2.6 6 2.6s3-2.6 6-2.6 3 2.6 6 2.6M3 15.5c3 0 3 2.6 6 2.6s3-2.6 6-2.6 3 2.6 6 2.6'
 };
 const CHEVRON = 'M6 9l6 6 6-6';
-const WARN    = 'M12 3.4L1.6 20.6h20.8L12 3.4zM12 9.6v4.2M12 17.3v.1';
-const INFO    = 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5M12 7.8v.1';
 const TICK    = 'M20 6L9 17l-5-5';
 const CROSS   = 'M18 6L6 18M6 6l12 12';
 
@@ -714,9 +664,7 @@ const TILE = {
   ecs:     {c:'#ED7100', inner:'<path d="M12 4.4l6.2 3.3v6.6L12 17.6l-6.2-3.3V7.7L12 4.4z"/><path d="M5.8 7.7L12 11l6.2-3.3M12 11v6.6"/>'},
   airflow: {c:'#E7157B', inner:'<circle cx="6.6" cy="7.4" r="1.7"/><circle cx="17.4" cy="7.4" r="1.7"/><circle cx="12" cy="16.6" r="1.7"/><path d="M8.3 7.4h7.4M7.6 9l3.5 6M16.4 9l-3.5 6"/>'},
   kms:     {c:'#DD344C', inner:'<path d="M8.5 10.6V8.5a3.5 3.5 0 017 0v2.1"/><rect x="6.5" y="10.6" width="11" height="7" rx="1.4"/><path d="M12 13.1v2"/>'},
-  product: {c:'#CF2C91', inner:'<path d="M5.5 18.5h13M8 18.5v-5M12 18.5V6.5M16 18.5v-8"/>'},
-  // non-AWS systems get a neutral slate tile so they never read as an official service icon
-  mssql:   {c:'#5B6478', inner:'<ellipse cx="12" cy="6.8" rx="5.8" ry="2.5"/><path d="M6.2 6.8v10.4c0 1.4 2.6 2.5 5.8 2.5s5.8-1.1 5.8-2.5V6.8M6.2 12c0 1.4 2.6 2.5 5.8 2.5s5.8-1.1 5.8-2.5"/>'}
+  product: {c:'#CF2C91', inner:'<path d="M5.5 18.5h13M8 18.5v-5M12 18.5V6.5M16 18.5v-8"/>'}
 };
 const tile = k => `<svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="3.5" fill="${TILE[k].c}"/>
   <g fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${TILE[k].inner}</g></svg>`;
@@ -776,6 +724,14 @@ function readiness(e) {
 
 const TONE_COLOR = {live:'#2F7F68', poc:'#0000F5', partial:'#B45F1F', planned:'#CF2C91', none:'#8A93A6'};
 
+/* The AWS badge is derived, never declared: an entity carries it only if some tier
+   actually references an AWS service. VietJet Cargo runs SmartKargo and a Microsoft
+   SQL replica, so it gets no badge — and none of this drifts when the model changes. */
+const AWS_KEYS = new Set(['s3','glue','athena','redshift','rds','lakeFormation','glueCatalog','sagemakerStudio']);
+const usesAws = e => Object.values(e.tiers).some(t =>
+  (t.services || []).some(s => AWS_KEYS.has(s.key)) ||
+  (t.panels   || []).some(p => (p.icons || []).some(k => AWS_KEYS.has(k))));
+
 /* `asset` may carry inline <em>; it is authored in MODEL, never user input, so it is
    interpolated raw. Every other field goes through esc(). */
 function tier(n, title, t, extra = '') {
@@ -784,36 +740,25 @@ function tier(n, title, t, extra = '') {
   // source panels, domains, products — and counting it would swallow the empty message on
   // any tier that has one, just as ignoring it once produced a false empty state.
   const own = !!(t.asset || (t.services && t.services.length) || (t.panels && t.panels.length));
-  const note = t.note ? `<p class="tier-note">${esc(t.note)}</p>` : '';
-  const body = own
-    ? `${t.asset ? `<p class="asset">${t.asset}</p>` : ''}${note}
-       ${t.services && t.services.length ? `<div class="svcs">${t.services.map(svcRow).join('')}</div>` : ''}
-       ${t.panels && t.panels.length ? `<div class="panels">${t.panels.map(capPanel).join('')}</div>` : ''}`
-    : `${note}${t.empty ? `<div class="tier-empty"><b>?</b><span>${esc(t.empty)}</span></div>` : ''}`;
 
-  // A tier can be absent and still have something sitting in its place. Naming that
-  // stand-in — and what it does not give you — is the point of an empty tier.
-  const standin = t.standin ? `<div class="standin">
-      <div class="standin-tag">${ico(WARN)}<span>Stands in for this tier</span></div>
-      ${capPanel(t.standin)}
-      ${t.standin.note ? `<p class="standin-note">${esc(t.standin.note)}</p>` : ''}
-    </div>` : '';
-
-  const missing = (t.missing && t.missing.length) ? `<div class="missing">
-      <span class="missing-label">Missing</span>
-      ${t.missing.map(m => `<span class="miss">${esc(m)}</span>`).join('')}
-    </div>` : '';
-
-  const contradiction = t.contradiction ? `<div class="contradiction">${ico(INFO)}
-      <p><b>Source deck disagrees.</b> ${esc(t.contradiction)}</p></div>` : '';
-
-  return `<div class="tier s-${st}">
-    <div class="tier-head">
+  const head = `<div class="tier-head">
       <span class="tier-num">${n}</span>
       <span class="tier-title">${esc(title)}</span>
       <span class="tier-status">${esc(TIER_LABEL[st])}</span>
-    </div>
-    ${body}${extra}${standin}${missing}${contradiction}
+    </div>`;
+
+  // A tier that does not exist gets one line and nothing else — no stand-in box, no
+  // list of what is absent, no owner. There is nothing there to own or describe.
+  if (!own && !extra) return `<div class="tier s-${st}">${head}
+      ${t.empty ? `<p class="tier-none">${esc(t.empty)}</p>` : ''}
+    </div>`;
+
+  const note = t.note ? `<p class="tier-note">${esc(t.note)}</p>` : '';
+  return `<div class="tier s-${st}">${head}
+    ${t.asset ? `<p class="asset">${t.asset}</p>` : ''}${note}
+    ${t.services && t.services.length ? `<div class="svcs">${t.services.map(svcRow).join('')}</div>` : ''}
+    ${t.panels && t.panels.length ? `<div class="panels">${t.panels.map(capPanel).join('')}</div>` : ''}
+    ${extra}
     ${t.owner ? `<p class="owner-line" style="margin-left:0;margin-top:9px">Owner · <b>${esc(t.owner)}</b></p>` : ''}
   </div>`;
 }
@@ -846,19 +791,24 @@ function entityHTML(e) {
   const r = readiness(e);
   const seg = s => `<i class="s-${s}"></i>`;
 
-  // data products hang off the lakehouse tier — the user-facing end of the ladder
+  // Data products hang off the lakehouse tier. When that tier does not exist there is
+  // nothing to hang them from, so the whole block is suppressed and the tier collapses
+  // to its one line.
   const lh = t.lakehouse;
-  const productBlock = (lh.products && lh.products.length)
-    ? `<div class="products">
-         <h4>Data products · ${lh.products.length}</h4>
-         <div class="panels">${lh.products.map(p =>
-           capPanel({role:p.kind || 'Data product', value:p.label || p, tiles:['product']})).join('')}</div>
-         ${lh.productOwner ? `<p class="owner-line" style="margin:9px 0 0">Product owner · <b>${esc(lh.productOwner)}</b></p>` : ''}
-       </div>`
-    : `<div class="products"><h4>Data products</h4>
-         <div class="tier-empty"><b>?</b><span>None named in the source</span></div></div>`;
+  const lhExists = !!(lh.asset || (lh.services && lh.services.length) || (lh.panels && lh.panels.length));
 
-  const domainBlock = (lh.domains && lh.domains.length)
+  const productBlock = !lhExists ? ''
+    : (lh.products && lh.products.length)
+      ? `<div class="products">
+           <h4>Data products · ${lh.products.length}</h4>
+           <div class="panels">${lh.products.map(p =>
+             capPanel({role:p.kind || 'Data product', value:p.label || p, tiles:['product']})).join('')}</div>
+           ${lh.productOwner ? `<p class="owner-line" style="margin:9px 0 0">Product owner · <b>${esc(lh.productOwner)}</b></p>` : ''}
+         </div>`
+      : `<div class="products"><h4>Data products</h4>
+           <div class="tier-empty"><b>?</b><span>None named in the source</span></div></div>`;
+
+  const domainBlock = (lhExists && lh.domains && lh.domains.length)
     ? `<div class="domains">${lh.domains.map(d => `<span class="domain">${esc(d)}</span>`).join('')}</div>`
     : '';
 
@@ -866,7 +816,7 @@ function entityHTML(e) {
     <div class="node-head">
       <span class="node-dot"></span>
       <h2>${esc(e.name)}</h2>
-      <img class="aws-mark" src="${ASSETS.awsMark}" alt="AWS">
+      ${usesAws(e) ? `<img class="aws-mark" src="${ASSETS.awsMark}" alt="AWS">` : ''}
       <span class="meter-wrap">
         <span class="meter">${seg(t.sources.status)}${seg(t.lake.status)}${seg(lh.status)}</span>
         <span class="meter-label" style="color:${TONE_COLOR[r.tone]}">${esc(r.label)}</span>
@@ -1092,10 +1042,10 @@ function legend() {
          data stops moving.</p>
     </div>
     <div class="band-col">
-      <h5>Empty tiers still say something</h5>
-      <p>Where a tier does not exist, the card names what <b>stands in its place</b> and what that
-         stand-in does not give you. <b>VietJet Cargo</b> has a partial Microsoft SQL replica where
-         a lake would be; <b>Galaxy</b> has an RDS instance. Neither is a lake.</p>
+      <h5>Where the ladder stops</h5>
+      <p><b>VietJet Cargo</b> has one source system and a partial SQL replica — no lake, nothing
+         modelled. <b>Galaxy</b> has an RDS instance and a catalog with nothing beneath it. A tier
+         that does not exist gets one line and no further ceremony.</p>
     </div>
     <div class="band-col">
       <h5>The deck is not evidence</h5>
