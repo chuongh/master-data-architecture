@@ -1,0 +1,8 @@
+# Local editor / agent tooling
+.claude/
+
+# Unrelated project that happens to live in this working directory
+warranty-tracker.html
+docs/superpowers/specs/*-warranty-tracker-*.md
+
+.DS_Store

@@ -1,0 +1,177 @@
+# Sovico Group — Data Platform AS-IS Map (single-page HTML)
+
+Date: 2026-08-14
+Status: approved, ready to implement
+Source of truth: `~/Desktop/master-achitecture.pptx` (slide 2)
+
+## Problem
+
+Sovico Group has no single picture of how data actually moves today. The only artefact is one
+PowerPoint slide showing a target hub-and-spoke topology: four business units each running an AWS
+stack, all pointing into a "Central Governance — Galaxy Global TMO" hub. The slide states the
+*intent*; it does not state the *current* state — it names no source systems, no databases, and
+says nothing about whether any of those arrows are live.
+
+The goal of this page is the AS-IS view: for every entity in the group, what data sources exist,
+whether that entity already has a data lake or is still database-only, and what its actual
+connection to the central platform is today. That map becomes the evidence base for designing the
+TO-BE architecture in a later pass.
+
+## Measured current state (extracted from the pptx, not guessed)
+
+Slide 2 is 13.333in × 7.5in and contains exactly one diagram. Extracted via `lxml` over
+`ppt/slides/slide2.xml`:
+
+| Block | Position (in) | Border | AWS services named |
+|---|---|---|---|
+| Central Governance / Galaxy Global TMO | 4.44, 2.36 · 3.61×3.47 | `#0000F5` | SageMaker Unified Studio |
+| VietJet Air | 0.69, 1.83 · 3.06×2.67 | `#E4803A` | Glue, Lake Formation, Open Table Format, Glue Data Catalog |
+| VietJet Cargo | 0.70, 4.63 · 3.06×2.67 | `#55B497` | Athena, Redshift, Lake Formation, Glue Data Catalog, SageMaker |
+| HDSaison | 8.75, 1.83 · 2.99×2.79 | `#0000F5` | Lake Formation, Redshift, Athena, Open Table Format, Glue Data Catalog |
+| Galaxy | 8.75, 4.80 · 2.99×2.49 | `#BE3C8E` | Lake Formation, Amazon RDS instance, Glue Data Catalog |
+
+Four `rightArrow`/`leftArrow` shapes (`#9AA6B8`) point from the four unit cards into the centre.
+
+Design tokens read off the same XML:
+
+- Font: Montserrat throughout (`Montserrat ExtraBold` for headings)
+- Title 20pt `#0000FF` · subtitle 14pt `#5B6478` · service labels 10pt `#5B6478`
+- Accent rule `#CF2C91` · card = `roundRect`, white fill, 2pt (`w="25400"`) accent border
+- Media: Galaxy Global logo (`image1.svg`), brand diagonal-stripe motif (`image2.png`),
+  AWS wordmark badge (`image3.png`), and 8 official AWS service icons as SVG
+  (`image4`–`image11`: SageMaker Unified Studio, Glue, Lake Formation, Glue Data Catalog, S3,
+  Athena, Redshift, RDS instance)
+
+What the extraction proves, and what the page should say out loud: **AWS Lake Formation and AWS
+Glue Data Catalog are the only two services present in all four units.** The governance plane is
+the sole thing already standard across the group; storage format and compute are not. VietJet Air
+has no consumption service at all; Galaxy has no lake, only an RDS instance; VietJet Cargo and
+HDSaison have no Glue ETL; only VietJet Air and HDSaison use an open table format.
+
+## Scope
+
+In scope:
+
+- One self-contained HTML page, one large pannable/zoomable canvas, AS-IS state only
+- Hub-and-spoke topology preserved from the slide: two entities left, two right, hub centre
+- Four entities from the slide, plus empty dashed placeholder slots for entities not yet surveyed
+- Per entity: source systems, platform state (**data lake** if one exists, otherwise **database**),
+  consumption services, and the connection status of its spoke into the hub
+- All content driven by a single `MODEL` object at the top of the file
+- Every fact not present in the pptx is rendered in "to confirm" styling
+
+Out of scope (deliberately):
+
+- The TO-BE architecture. Decided by the user: AS-IS first, design TO-BE from it afterwards.
+- Responsive layout and fixed widths. The user plans a very large diagram; the canvas is sized to
+  its content and navigated by pan/zoom instead.
+- Unit tests. Waived by the user for this single presentational page; verification is visual
+  (see below).
+- Layered/swimlane presentation. Proposed and rejected by the user in favour of hub-and-spoke.
+- Entities beyond the four in the slide (HDBank, Sovico Aviation, Phú Long, Furama). Empty
+  placeholder slots stand in for them until surveyed.
+
+## Approach
+
+### Layout
+
+A fixed-size canvas (~1900 × 1650 px, grown by the layout engine as entities are added), holding a
+three-column arrangement that mirrors the slide:
+
+```
+   left column            centre            right column
+   [ VietJet Air ]                          [ HDSaison ]
+                     [ CENTRAL HUB ]
+   [ VietJet Cargo ]  Galaxy Global TMO     [ Galaxy ]
+   [ + to survey ]                          [ + to survey ]
+```
+
+The hub is vertically centred against the full stack of entity cards. New entities alternate
+left/right and extend the canvas downward.
+
+### Entity card
+
+Each card follows the Galaxy deck card language — `border-radius`, white fill, 2px border in the
+entity's accent colour — and contains three stacked blocks:
+
+1. **Header** — entity name in the accent colour, AWS badge, and a status chip:
+   `Data lake live` / `Database only` / `Not surveyed`
+2. **Source systems** — chips, one per system, typed by icon (OLTP, ERP, CRM, file/SFTP, API,
+   stream). Seeded by industry and all marked *to confirm*.
+3. **Platform** — mutually exclusive: a **Data Lake** node (S3 + open table format + its AWS
+   services) or a **Database / warehouse** node. Followed by the consumption services, or an
+   explicit "No consumption layer identified" when the slide shows none.
+
+### Spokes
+
+One edge per entity from the card's hub-facing edge to the hub, drawn as a cubic bezier in an SVG
+layer whose coordinates are computed from live element positions after layout, so edges stay
+correct at any canvas size. Four line styles carry the connection status:
+
+| Style | Meaning |
+|---|---|
+| Solid, accent colour | Automated and live |
+| Dashed | Exists but manual / batch / one-way |
+| Dotted magenta `#CF2C91` | Does not exist yet — belongs to TO-BE |
+| Grey + `?` | Not yet surveyed |
+
+All four spokes ship as **not surveyed**. The slide's arrows describe target state, not observed
+state; claiming them as live would be inventing a fact. The page says so in a footnote.
+
+### Seeded source systems
+
+Seeded by industry so the user edits rather than types from scratch; every one carries the
+*to confirm* treatment (dashed border, muted text):
+
+- VietJet Air — PSS / Reservation, Departure Control, Loyalty, Web & Mobile clickstream, Revenue accounting
+- VietJet Cargo — Cargo booking, AWB / Manifest, Ground handling, Interline partner feeds
+- HDSaison — Core lending, Loan origination, Collection & recovery, CRM, Credit bureau feed
+- Galaxy — ERP, CRM, Ticketing / POS, Content & media metadata
+
+### Data model
+
+Everything renders from one `const MODEL = { meta, hub, entities: [...] }` block at the top of the
+file. Adding an entity, a source system, or changing a connection status is a JSON edit; no HTML or
+CSS is touched. This is the property that makes the page survive many rounds of survey input.
+
+### Assets and self-containment
+
+The eight AWS service icons are inlined as SVG `<symbol>`s taken verbatim from the pptx; the Galaxy
+logo, AWS wordmark and brand stripe motif are inlined as SVG / base64 data URIs. The page opens
+offline with no network fetch. Montserrat is loaded from Google Fonts with a full local fallback
+stack, so the page degrades to Helvetica/Arial rather than breaking when offline.
+
+### Interaction
+
+Drag to pan, `+` / `−` / `0` and on-screen buttons to zoom, a **Fit** button to frame the whole
+canvas. Hovering an entity dims the others and highlights its spoke. A survey-progress readout
+reports how many connections are still unconfirmed.
+
+## How to verify
+
+No unit tests — waived by the user, and the deliverable is a single presentational page with no
+extractable logic beyond layout. Verification is therefore visual and structural:
+
+1. Open the file in the in-app browser at full canvas and at Fit zoom.
+2. Confirm against this document: 4 entity cards present with the correct accent colours; every
+   AWS service from the extraction table appears on the right card and no service appears that the
+   extraction did not name; hub shows SageMaker Unified Studio.
+3. Confirm all four spokes render in the *not surveyed* style and the survey readout says 0 of 4
+   confirmed.
+4. Check for the defects that actually occur: text overflowing a card, spokes crossing through
+   cards, edges detached from their anchors after zoom, placeholder slots rendering as if they
+   were real entities.
+5. Read the browser console — zero errors.
+
+## Known risks
+
+- **Seeded source systems could be mistaken for surveyed fact.** Mitigated by the dashed *to
+  confirm* treatment on every seeded chip plus a legend entry, but the risk is real if someone
+  screenshots one card out of context. If the user prefers, the seed can be emptied in one edit.
+- **The pptx is the only source.** Where the slide is silent — VietJet Cargo's storage format, every
+  entity's ingestion mechanism — the page shows an explicit unknown rather than a guess. Those
+  unknowns are the survey backlog, not a rendering defect.
+- **Bezier spokes can cross entity cards** once many entities are added down the canvas. Acceptable
+  at six slots; if the canvas grows past that, spoke routing needs revisiting.
+- **Google Fonts is a network dependency** for exact brand typography. The fallback stack keeps the
+  page usable offline but metrics will shift slightly.
