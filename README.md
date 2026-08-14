@@ -17,13 +17,15 @@ Each entity card reads top to bottom — **source systems → data lake → lake
 warehouse*, where the entity runs one) — and the three-segment meter beside its name shows the state
 of each tier in that order, so you can see where data stops moving.
 
-| Entity | How far data gets | Evidence |
-|---|---|---|
-| Victoria School | Products on a POC lake | Own inventory |
-| VietJet Cargo | Sources only — no lake, nothing modelled | Own inventory |
-| HDSaison | Lakehouse ready | Source deck — **unverified** |
-| VietJet Air | Lakehouse in progress | Source deck — **unverified** |
-| Galaxy | Ladder gap — catalog over a relational database | Source deck — **unverified** |
+| Entity | Region | How far data gets | Evidence |
+|---|---|---|---|
+| Victoria School | — | Products on a POC lake | Own inventory |
+| VietJet Cargo | Aviation | Sources only — no lake, nothing modelled | Own inventory |
+| HDSaison | — | Lakehouse ready | Source deck — **unverified** |
+| VietJet Air | Aviation | Lakehouse in progress | Source deck — **unverified** |
+| Galaxy | — | Ladder gap — catalog over a relational database | Source deck — **unverified** |
+| Airport NEO | — | Not surveyed | Content to follow |
+| VietJet MRO | — | Not surveyed | Content to follow |
 
 A tier can be live while the tier below it is empty. That inversion is the point of the map, not a
 rendering fault, so the meter shows each tier's own state rather than one averaged score.
@@ -60,7 +62,8 @@ No HTML or CSS needs to change.
 | `tiers.sources.items[].confirmed` | `false` → dashed "to confirm"; `true` → solid |
 | `tiers.sources.items[].owner` / `.admin` | per system, because ownership differs system by system |
 | `link.status` | `unknown` · `manual` · `planned` · `live` |
-| `placeholder: true` | renders an empty "to be surveyed" slot — delete the flag to make it a real entity |
+| `region` | groups consecutive same-column entities in one labelled box, e.g. `Aviation` |
+| `placeholder: true` | renders an awaiting-content card — delete the flag to make it a real entity |
 
 Two things are derived rather than declared, so they cannot drift: the **readiness label** is
 computed from the tier statuses, and the **AWS badge** appears only if some tier actually references

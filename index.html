@@ -95,7 +95,23 @@ body{
 }
 #viewport.grabbing{cursor:grabbing}
 #canvas{position:absolute; top:0; left:0; transform-origin:0 0}
-#edges{position:absolute; top:0; left:0; overflow:visible; pointer-events:none; z-index:1}
+#edges{position:absolute; top:0; left:0; overflow:visible; pointer-events:none; z-index:2}
+
+/* A region groups sibling entities that belong to one business line.
+   Solid neutral border on purpose — dashed already means "unconfirmed" here. */
+.region{
+  position:absolute; z-index:1; border-radius:18px;
+  border:1px solid #C7CEDA; background:rgba(90,100,120,.035);
+}
+.region-label{
+  position:absolute; top:12px; left:18px; display:flex; align-items:center; gap:8px;
+  font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted);
+}
+.region-label i{
+  width:6px; height:6px; border-radius:50%; background:var(--gray); display:block; flex-shrink:0;
+}
+.region-label span{font-weight:600; letter-spacing:.08em; color:var(--faint)}
 
 /* decorative brand motif, bottom-right of canvas */
 .decor{
@@ -105,7 +121,7 @@ body{
 
 /* ============================ CARDS ============================ */
 .node{
-  position:absolute; z-index:2; background:var(--surface);
+  position:absolute; z-index:3; background:var(--surface);
   border-radius:14px; border:2px solid var(--accent,var(--hair));
   padding:16px 18px 18px; transition:opacity .16s ease, box-shadow .16s ease;
   box-shadow:0 1px 2px rgba(31,39,51,.05), 0 8px 24px -14px rgba(31,39,51,.28);
@@ -281,6 +297,8 @@ body{
 }
 .node.is-placeholder .node-head h2{color:var(--faint)}
 .node.is-placeholder .node-dot{background:var(--hair)}
+.node.is-placeholder.is-named .node-head h2{color:var(--accent)}
+.node.is-placeholder.is-named .node-dot{background:var(--accent)}
 .ph-body{
   border:1px dashed var(--hair); border-radius:9px; padding:14px;
   text-align:center; margin-top:12px;
@@ -336,7 +354,7 @@ body{
 
 /* ================= CANVAS FURNITURE (legend + provenance band) ================= */
 .furniture{
-  position:absolute; z-index:2; background:var(--surface);
+  position:absolute; z-index:3; background:var(--surface);
   border:1px solid var(--hair); border-radius:12px; padding:15px 17px 14px;
   box-shadow:0 1px 2px rgba(31,39,51,.04), 0 8px 24px -18px rgba(31,39,51,.3);
 }
@@ -460,7 +478,7 @@ const MODEL = {
 
   entities:[
     {
-      id:'vja', name:'VietJet Air', accent:'#E4803A', side:'left',
+      id:'vja', name:'VietJet Air', accent:'#E4803A', side:'left', region:'Aviation',
       owner:'Owner not surveyed',
       tiers:{
         sources:{
@@ -493,7 +511,7 @@ const MODEL = {
       link:{status:'unknown', label:'To confirm'}
     },
     {
-      id:'vjc', name:'VietJet Cargo', accent:'#55B497', side:'left',
+      id:'vjc', name:'VietJet Cargo', accent:'#55B497', side:'left', region:'Aviation',
       owner:'ICT · Nelson · Lê Minh Trí',
       surveyed:true,
       tiers:{
@@ -624,6 +642,16 @@ const MODEL = {
       },
       link:{status:'unknown', label:'To confirm'}
     },
+    // Named but not yet surveyed. Fill in `tiers` and drop `placeholder` to turn one of
+    // these into a full card — nothing else needs to change.
+    {
+      id:'neo', name:'Airport NEO', accent:'#00A0E3', side:'right', placeholder:true,
+      hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
+    },
+    {
+      id:'mro', name:'VietJet MRO', accent:'#4A6B8A', side:'right', placeholder:true,
+      hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
+    },
     {
       id:'ph1', name:'Entity', side:'right', placeholder:true,
       hint:'Add the next entity here — its source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
@@ -632,7 +660,8 @@ const MODEL = {
 };
 
 /* ══════════════════════════════ CONSTANTS ══════════════════════════════ */
-const L = { pad:70, cardW:610, hubW:440, gapX:104, gapY:48, tail:230 };
+const L = { pad:70, cardW:610, hubW:440, gapX:104, gapY:48, tail:230,
+            regionPad:20, regionHead:38 };
 
 const LINK_STYLE = {
   live:    {label:'Automated',    dash:null,     width:2.5, color:null},
@@ -781,13 +810,22 @@ document.getElementById('decor').src           = ASSETS.stripes;
 
 function entityHTML(e) {
   if (e.placeholder) {
-    return `<div class="node is-placeholder" data-id="${e.id}" style="--accent:var(--hair)">
+    // A named placeholder keeps its identity and accent so it reads as a real member of
+    // the group awaiting content; an unnamed one is just an open slot.
+    const named = e.name !== 'Entity';
+    return `<div class="node is-placeholder${named ? ' is-named' : ''}" data-id="${e.id}"
+                 style="--accent:${named ? e.accent : 'var(--hair)'}">
       <div class="node-head">
         <span class="node-dot"></span>
-        <h2>${esc(e.name)} — to be surveyed</h2>
-        <span class="chip chip-none">Empty slot</span>
+        <h2>${esc(e.name)}${named ? '' : ' — to be surveyed'}</h2>
+        <span class="meter-wrap">
+          <span class="meter"><i></i><i></i><i></i></span>
+          <span class="meter-label" style="color:${TONE_COLOR.none}">${named ? 'Not surveyed' : 'Empty slot'}</span>
+        </span>
       </div>
-      <div class="ph-body"><b>Not yet mapped</b><span>${esc(e.hint)}</span></div>
+      <div class="ph-body">
+        <b>${named ? 'Content to follow' : 'Not yet mapped'}</b><span>${esc(e.hint)}</span>
+      </div>
     </div>`;
   }
 
@@ -875,21 +913,49 @@ function layout() {
   const colRX = colCX + L.hubW + L.gapX;
   CW = colRX + L.cardW + L.pad;
 
+  const card = (e, x, y) => {
+    const el = nodeEl(e.id);
+    el.style.width = L.cardW + 'px';
+    el.style.left  = x + 'px';
+    el.style.top   = y + 'px';
+    e._box = {x, y, w:L.cardW, h:el.offsetHeight};
+    return el.offsetHeight;
+  };
+
+  // Consecutive entities sharing a `region` are wrapped in one labelled box. The run has
+  // to be contiguous within its column — that is what makes the box a single rectangle.
+  const regions = [];
   const place = (list, x) => {
-    let y = L.pad;
-    list.forEach(e => {
-      const el = nodeEl(e.id);
-      el.style.width = L.cardW + 'px';
-      el.style.left  = x + 'px';
-      el.style.top   = y + 'px';
-      e._box = {x, y, w:L.cardW, h:el.offsetHeight};
-      y += el.offsetHeight + L.gapY;
-    });
+    let y = L.pad, i = 0;
+    while (i < list.length) {
+      const r = list[i].region;
+      if (!r) { y += card(list[i], x, y) + L.gapY; i++; continue; }
+
+      let j = i; while (j < list.length && list[j].region === r) j++;
+      const top = y;
+      y += L.regionHead + L.regionPad;
+      for (let k = i; k < j; k++) y += card(list[k], x, y) + L.gapY;
+      y = y - L.gapY + L.regionPad;
+      regions.push({label:r, count:j - i, x:x - L.regionPad, y:top,
+                    w:L.cardW + L.regionPad * 2, h:y - top});
+      y += L.gapY;
+      i = j;
+    }
     return y - L.gapY;
   };
 
   const hL = place(left, colLX), hR = place(right, colRX);
   const contentBottom = Math.max(hL, hR);
+
+  canvas.querySelectorAll('.region').forEach(n => n.remove());
+  regions.forEach(r => {
+    const d = document.createElement('div');
+    d.className = 'region';
+    Object.assign(d.style, {left:r.x + 'px', top:r.y + 'px', width:r.w + 'px', height:r.h + 'px'});
+    d.innerHTML = `<div class="region-label"><i></i>${esc(r.label)}
+      <span>· ${r.count} ${r.count === 1 ? 'entity' : 'entities'}</span></div>`;
+    canvas.appendChild(d);
+  });
 
   const hub = nodeEl('hub');
   hub.style.width = L.hubW + 'px';

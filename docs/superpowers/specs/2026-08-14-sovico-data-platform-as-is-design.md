@@ -89,6 +89,21 @@ three-column arrangement that mirrors the slide:
 The hub is vertically centred against the full stack of entity cards. New entities alternate
 left/right and extend the canvas downward.
 
+### Regions
+
+An entity may declare a `region`. Consecutive entities in the same column sharing one region are
+wrapped in a single labelled box — a solid neutral border with a light tint and a label reading
+`AVIATION · 2 entities`. The border is **solid on purpose**: dashed already means "unconfirmed"
+everywhere else on this page, so a dashed container would read as a status rather than a grouping.
+
+The run has to be contiguous within its column; that constraint is what lets the box stay one
+rectangle rather than needing a path around scattered members. Regions sit at `z-index: 1`, behind
+the spokes and cards, so a spoke leaving a card inside a region crosses the region border cleanly.
+
+Currently one region exists — **Aviation**, holding VietJet Air and VietJet Cargo. Airport NEO and
+VietJet MRO are aviation businesses too and are deliberately outside it, pending a decision on
+whether the region means "the VietJet airline group" or "everything aviation".
+
 ### Entity card — the three-tier readiness ladder
 
 Revised 2026-08-14 after the first review. The card no longer lists services by function
