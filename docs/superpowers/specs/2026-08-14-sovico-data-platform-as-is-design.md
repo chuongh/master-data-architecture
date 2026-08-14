@@ -95,18 +95,28 @@ Revised 2026-08-14 after the first review. The card no longer lists services by 
 (ingestion / storage / governance / consumption); it stacks the three tiers data actually passes
 through, so the card answers *where is the data and how far has it got*:
 
-1. **Header** — entity name in the accent colour, AWS badge, the owner line, and a
-   **three-segment readiness meter**, one segment per tier in order, each coloured by that tier's
-   own status.
-2. **① Source systems** — chips, one per system, typed by icon (OLTP, ERP, CRM, file, API, stream),
-   each with a small kind caption. Dashed until confirmed.
+1. **Header** — entity name in the accent colour, the owner line, and a **three-segment readiness
+   meter**, one segment per tier in order, each coloured by that tier's own status.
+2. **① Source systems** — one panel per system, typed by icon (OLTP, ERP, CRM, file, API, stream).
+   Dashed until confirmed.
 3. **② Data lake** — the raw landing tier: object storage plus the ingestion mechanism.
 4. **③ Lakehouse** — open table format, catalog, governance, query engines, business domains, and
-   the **data products** hanging off the end.
+   the **data products** hanging off the end. Tier 3 takes an optional title so an entity can name
+   what it actually runs; Victoria School's reads **Data Warehouse**.
 
 Each tier band carries its own status — `Live` · `POC` · `Partial` · `Planned` · `Not built` ·
 `Not surveyed` — rendered as a tinted band (teal / blue / amber) or a dashed outline, and its own
-owner line. A tier with nothing in it shows `?` and the reason.
+owner line.
+
+**A tier that does not exist gets its header and one sentence. Nothing else** — no owner, no list
+of what is absent, and on tier 3 no data-products block. An earlier revision filled empty tiers
+with a stand-in box, a `Missing` chip row and a callout where the source deck disagreed; it made
+the emptiest cards the busiest ones. Anything worth saying about an absent tier fits in the
+sentence, and anything that does not fit belongs in the provenance band instead.
+
+**The AWS badge is derived, not declared.** An entity carries it only if some tier actually
+references an AWS service key. VietJet Cargo runs SmartKargo and a Microsoft SQL replica, so it has
+no badge — and the badge cannot drift as the model changes.
 
 `POC` is distinct from `Partial`: POC means the tier is built and running but not production;
 Partial means it is production but incomplete. Victoria School's lake is POC.
@@ -142,29 +152,52 @@ Each status has a rank: `live` = 2, `poc` and `partial` = 1, everything else = 0
 
 The gap test comes first deliberately: an upper tier standing on nothing outranks any other reading.
 
-A `Ladder gap` card also renders an explicit magenta flag naming the inversion. Two entities hit it:
-VietJet Cargo runs Athena, Redshift and SageMaker with no identified lake beneath them; Galaxy has
-Lake Formation and Glue Data Catalog registered over a relational database.
+A `Ladder gap` card also renders an explicit magenta flag naming the inversion. One entity hits it:
+Galaxy has Lake Formation and Glue Data Catalog registered over a relational database.
 
-Tier assignment for the four deck-derived entities is **our reading** of a flat service list — the
-slide does not label tiers. The mapping used: object storage and ingestion → lake; open table
-format, catalog, governance and engines → lakehouse. This is stated on the page itself.
+Tier assignment for the three remaining deck-derived entities is **our reading** of a flat service
+list — the slide does not label tiers. The mapping used: object storage and ingestion → lake; open
+table format, catalog, governance and engines → lakehouse. This is stated on the page itself.
 
 ### Victoria School — the worked example
 
-Added as the fifth entity and the design sample, sourced from the entity's own inventory rather
-than the deck, which is why it is the only card with confirmed source systems and per-tier owners:
+The design sample, sourced from the entity's own inventory rather than the deck:
 
 | Tier | Asset | Owner |
 |---|---|---|
-| Sources | HubSpot (CRM), PowerSchool (SIS), Victoria Portal, Dashboard Postgres | IT Team · App Owners · System Admins |
-| Lake | AWS S3 Landing & RAW, Hanoi Local Zone · Ingestion ECS · Security KMS/IAM | IT / Data Team · Data Engineering · AWS IAM / Data Ops |
-| Lakehouse | Victoria CORE & Business Marts · Admissions, Enrollment, Tuition, Feedback · Glue, Athena, Glue Data Catalog · Airflow | IT / Data Team · Lead Data Architect |
+| Sources | HubSpot (CRM), PowerSchool (SIS), Victoria Portal, Dashboard Postgres | per system: App Owners · System Admins |
+| Lake — **POC** | AWS S3 Landing & RAW, Hanoi Local Zone. Five capability panels: Ingestion (ECS), Storage (S3), Governance (Glue/Athena), Orchestration (Airflow), Security (KMS/IAM) | IT / Data Team · Data Engineering · AWS IAM / Data Ops |
+| **Data Warehouse** | Victoria CORE & Business Marts · Admissions, Enrollment, Tuition, Feedback | IT / Data Team · Lead Data Architect |
 | Products | BOD Executive Dashboard, Admissions Funnel, Enrollment Overview, Tuition Collection | Executive / Operations · BOD / Domain Leads · Dashboard Admin |
 
-Its `Data Platform` row from the source table (Victoria Enterprise Data Platform) is not a tier —
-it is the capability spine running through all three — so it renders as a caption on the card
-header rather than a band of its own.
+The `Data Platform` row of the source table is not a tier of its own — its five capabilities live in
+the lake tier as panels, and the platform name renders as a caption on the card header.
+
+Per-system owners currently repeat (`App Owners` / `System Admins` on all four) because the source
+table records ownership per layer, not per system. The structure is in place for real values.
+
+Only `BOD Executive Dashboard` is explicitly a dashboard in the source; the other three are typed
+`KPI report` from the table's own phrase "executive dashboards, KPI reports, and secure
+drill-through APIs". Those drill-through APIs are named nowhere, so none are drawn.
+
+### VietJet Cargo — the worked example for an entity with nothing built
+
+Replaced the deck-derived version on 2026-08-14 with the entity's own inventory:
+
+| Tier | State |
+|---|---|
+| Sources | **SmartKargo** (cargo management) and a **Microsoft SQL** replica of some of its tables. Both owned by Nelson, administered by Lê Minh Trí, under ICT. |
+| Lake | *No lake of any kind.* |
+| Lakehouse | *Nothing modelled on top.* |
+
+The replica is a copy rather than a system of record, but it is one of the two places Cargo's data
+sits, so it belongs on the source tier — not described inside a lake tier that does not exist.
+
+**This entity is why the rest of the map should be distrusted.** Slide 2 credits VietJet Cargo with
+Athena, Redshift, SageMaker, Lake Formation and Glue Data Catalog. Its own inventory has none of
+them. For the first entity where a real inventory could be compared against the deck, the deck
+overstated by five services. VietJet Air, HDSaison and Galaxy are still drawn from that deck and
+must be treated as unverified until their owners confirm what runs. The provenance band says so.
 
 ### Spokes
 

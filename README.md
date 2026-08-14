@@ -13,27 +13,37 @@ so `index.html` renders identically offline with no network dependency.
 This is the **observed baseline**, not the target. The target architecture will be designed from it
 in a later pass.
 
-| Entity | Platform today | Services named in the source |
-|---|---|---|
-| VietJet Air | Data lake | Glue, Lake Formation, Open table format, Glue Data Catalog |
-| VietJet Cargo | Warehouse-led | Lake Formation, Glue Data Catalog, Athena, Redshift, SageMaker |
-| HDSaison | Data lake | Lake Formation, Glue Data Catalog, Athena, Redshift, Open table format |
-| Galaxy | Database only | Lake Formation, Glue Data Catalog, Amazon RDS instance |
+Each entity card reads top to bottom — **source systems → data lake → lakehouse** (or *data
+warehouse*, where the entity runs one) — and the three-segment meter beside its name shows the state
+of each tier in that order, so you can see where data stops moving.
 
-**Lake Formation and Glue Data Catalog are the only two services present in all four entities.**
-The governance plane is already standard across the group; storage format, ingestion and consumption
-are not. That gap is the argument for the central governance hub.
+| Entity | How far data gets | Evidence |
+|---|---|---|
+| Victoria School | Products on a POC lake | Own inventory |
+| VietJet Cargo | Sources only — no lake, nothing modelled | Own inventory |
+| HDSaison | Lakehouse ready | Source deck — **unverified** |
+| VietJet Air | Lakehouse in progress | Source deck — **unverified** |
+| Galaxy | Ladder gap — catalog over a relational database | Source deck — **unverified** |
+
+A tier can be live while the tier below it is empty. That inversion is the point of the map, not a
+rendering fault, so the meter shows each tier's own state rather than one averaged score.
 
 ## What is fact, what is not
 
-Everything is labelled on the page itself, but in short:
+Two entities are drawn from their own inventories. The other three come from
+`master-achitecture.pptx`, slide 2, **and should not be trusted**:
 
-- **Fact** — entities, AWS services and the hub-and-spoke topology, extracted from
-  `master-achitecture.pptx`, slide 2.
-- **Seeded, unconfirmed** — every source system chip. The source slide names *no* source systems at
-  all; these are seeded by industry as prompts for the survey. They render dashed until confirmed.
-- **Unknown** — all four hub connections read *not surveyed*. The slide's arrows describe target
-  state, so none is drawn as live. Ingestion is unidentified for three of the four entities.
+> Slide 2 credits **VietJet Cargo** with Athena, Redshift, SageMaker, Lake Formation and Glue Data
+> Catalog. Its own inventory shows **none of them** — one cargo system and a partial SQL replica.
+> For the first entity where the deck could be checked against reality, it overstated by five
+> services.
+
+- **Confirmed** — Victoria School and VietJet Cargo: tiers, per-system owners and admins, and
+  products, all from the entities themselves.
+- **Seeded, unconfirmed** — source systems on the three deck-derived entities. The slide names *no*
+  source systems at all; these are prompts for the survey and render dashed until confirmed.
+- **Unknown** — every hub connection reads *not surveyed*. The slide's arrows describe target state,
+  so none is drawn as live.
 
 ## Editing
 
@@ -44,10 +54,17 @@ No HTML or CSS needs to change.
 
 | Field | Values |
 |---|---|
-| `sources[].confirmed` | `false` → dashed "to confirm"; `true` → solid |
+| `tiers.<tier>.status` | `live` · `poc` · `partial` · `planned` · `none` · `unknown` |
+| `tiers.<tier>.empty` | the one sentence shown when the tier does not exist |
+| `tiers.lakehouse.title` | optional name for tier 3, e.g. `Data Warehouse`. Defaults to `Lakehouse` |
+| `tiers.sources.items[].confirmed` | `false` → dashed "to confirm"; `true` → solid |
+| `tiers.sources.items[].owner` / `.admin` | per system, because ownership differs system by system |
 | `link.status` | `unknown` · `manual` · `planned` · `live` |
-| `platform.kind` | `lake` · `db` · `unknown` |
 | `placeholder: true` | renders an empty "to be surveyed" slot — delete the flag to make it a real entity |
+
+Two things are derived rather than declared, so they cannot drift: the **readiness label** is
+computed from the tier statuses, and the **AWS badge** appears only if some tier actually references
+an AWS service.
 
 ## Design rationale
 
