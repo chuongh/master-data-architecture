@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /
+
+# Note: this file is served at chuongh.github.io/master-data-architecture/robots.txt.
+# Crawlers only honour robots.txt at the domain root (chuongh.github.io/robots.txt),
+# which belongs to a separate `chuongh.github.io` repository. It is kept here for the
+# day that repo exists, and as a statement of intent. The mechanism that actually
+# keeps this page out of search results is the <meta name="robots" content="noindex">
+# tag in index.html.
