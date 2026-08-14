@@ -100,9 +100,16 @@ The run has to be contiguous within its column; that constraint is what lets the
 rectangle rather than needing a path around scattered members. Regions sit at `z-index: 1`, behind
 the spokes and cards, so a spoke leaving a card inside a region crosses the region border cleanly.
 
-Currently one region exists — **Aviation**, holding VietJet Air and VietJet Cargo. Airport NEO and
-VietJet MRO are aviation businesses too and are deliberately outside it, pending a decision on
-whether the region means "the VietJet airline group" or "everything aviation".
+One region exists: **Aviation**, holding VietJet Air, VietJet Cargo, Airport NEO and VietJet MRO —
+the whole aviation line, not just the two airline entities. Because members must be contiguous in
+one column, all four sit in the left column and Victoria School moved to the right.
+
+That leaves the columns very uneven — an Aviation block of roughly 1,800px against 2,700px of
+individual entities. **The shorter column is therefore centred vertically against the taller one.**
+Top-aligning it left a large gap at the bottom that read as a mistake; centring reads as deliberate.
+The shift happens after both columns are placed and moves each card's recorded box as well as its
+DOM position, so spokes stay anchored — verified by checking every spoke still starts at its card's
+hub-facing edge midpoint after the shift.
 
 ### Entity card — the three-tier readiness ladder
 

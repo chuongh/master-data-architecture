@@ -24,8 +24,11 @@ of each tier in that order, so you can see where data stops moving.
 | HDSaison | — | Lakehouse ready | Source deck — **unverified** |
 | VietJet Air | Aviation | Lakehouse in progress | Source deck — **unverified** |
 | Galaxy | — | Ladder gap — catalog over a relational database | Source deck — **unverified** |
-| Airport NEO | — | Not surveyed | Content to follow |
-| VietJet MRO | — | Not surveyed | Content to follow |
+| Airport NEO | Aviation | Not surveyed | Content to follow |
+| VietJet MRO | Aviation | Not surveyed | Content to follow |
+
+The four aviation entities are drawn inside one **Aviation** region box. Region members must be
+contiguous in a column, so all four sit on the left.
 
 A tier can be live while the tier below it is empty. That inversion is the point of the map, not a
 rendering fault, so the meter shows each tier's own state rather than one averaged score.

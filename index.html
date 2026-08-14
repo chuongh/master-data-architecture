@@ -597,7 +597,7 @@ const MODEL = {
       link:{status:'unknown', label:'To confirm'}
     },
     {
-      id:'vsc', name:'Victoria School', accent:'#7A4FBF', side:'left',
+      id:'vsc', name:'Victoria School', accent:'#7A4FBF', side:'right',
       owner:'IT / Data Team · Head of Data / IT · Admin Team',
       platform:'Victoria Enterprise Data Platform',
       surveyed:true,
@@ -645,11 +645,11 @@ const MODEL = {
     // Named but not yet surveyed. Fill in `tiers` and drop `placeholder` to turn one of
     // these into a full card — nothing else needs to change.
     {
-      id:'neo', name:'Airport NEO', accent:'#00A0E3', side:'right', placeholder:true,
+      id:'neo', name:'Airport NEO', accent:'#00A0E3', side:'left', region:'Aviation', placeholder:true,
       hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
     },
     {
-      id:'mro', name:'VietJet MRO', accent:'#4A6B8A', side:'right', placeholder:true,
+      id:'mro', name:'VietJet MRO', accent:'#4A6B8A', side:'left', region:'Aviation', placeholder:true,
       hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
     },
     {
@@ -924,8 +924,8 @@ function layout() {
 
   // Consecutive entities sharing a `region` are wrapped in one labelled box. The run has
   // to be contiguous within its column — that is what makes the box a single rectangle.
-  const regions = [];
   const place = (list, x) => {
+    const regions = [];
     let y = L.pad, i = 0;
     while (i < list.length) {
       const r = list[i].region;
@@ -941,14 +941,27 @@ function layout() {
       y += L.gapY;
       i = j;
     }
-    return y - L.gapY;
+    return {bottom:y - L.gapY, regions};
   };
 
-  const hL = place(left, colLX), hR = place(right, colRX);
-  const contentBottom = Math.max(hL, hR);
+  // One column is usually much shorter than the other. Centring it against the taller one
+  // reads as deliberate, where leaving it top-aligned reads as a gap at the bottom.
+  const shift = (list, regions, dy) => {
+    if (!dy) return;
+    list.forEach(e => {
+      e._box.y += dy;
+      nodeEl(e.id).style.top = e._box.y + 'px';
+    });
+    regions.forEach(r => { r.y += dy; });
+  };
+
+  const cl = place(left, colLX), cr = place(right, colRX);
+  const contentBottom = Math.max(cl.bottom, cr.bottom);
+  shift(left,  cl.regions, (contentBottom - cl.bottom) / 2);
+  shift(right, cr.regions, (contentBottom - cr.bottom) / 2);
 
   canvas.querySelectorAll('.region').forEach(n => n.remove());
-  regions.forEach(r => {
+  [...cl.regions, ...cr.regions].forEach(r => {
     const d = document.createElement('div');
     d.className = 'region';
     Object.assign(d.style, {left:r.x + 'px', top:r.y + 'px', width:r.w + 'px', height:r.h + 'px'});
