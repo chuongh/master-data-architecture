@@ -97,21 +97,18 @@ body{
 #canvas{position:absolute; top:0; left:0; transform-origin:0 0}
 #edges{position:absolute; top:0; left:0; overflow:visible; pointer-events:none; z-index:2}
 
-/* A region groups sibling entities that belong to one business line.
-   Solid neutral border on purpose — dashed already means "unconfirmed" here. */
-.region{
-  position:absolute; z-index:1; border-radius:18px;
-  border:1px solid #C7CEDA; background:rgba(90,100,120,.035);
-}
+/* A region groups sibling entities that belong to one business line. Each carries its own
+   colour so two regions never read as the same block. Solid border on purpose — dashed
+   already means "unconfirmed" here, and a dashed container would read as a status.
+   Border, fill and label colour are set from the region's hue in layout(). */
+.region{position:absolute; z-index:1; border-radius:18px; border:1.5px solid}
 .region-label{
-  position:absolute; top:12px; left:18px; display:flex; align-items:center; gap:8px;
-  font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--muted);
+  position:absolute; top:12px; left:20px; display:flex; align-items:baseline; gap:8px;
+  font-size:10.5px; font-weight:800; letter-spacing:.17em; text-transform:uppercase;
+  color:#fff; border-radius:20px; padding:6px 15px;
+  box-shadow:0 2px 8px -3px rgba(31,39,51,.45);
 }
-.region-label i{
-  width:6px; height:6px; border-radius:50%; background:var(--gray); display:block; flex-shrink:0;
-}
-.region-label span{font-weight:600; letter-spacing:.08em; color:var(--faint)}
+.region-label span{font-weight:600; letter-spacing:.07em; opacity:.78; font-size:9.5px}
 
 /* decorative brand motif, bottom-right of canvas */
 .decor{
@@ -466,6 +463,13 @@ const MODEL = {
     asOf:'As of August 2026'
   },
 
+  // One hue per region. Chosen to avoid the tier-status palette (teal live, blue POC,
+  // amber partial, magenta planned) so a region wash never reads as a status.
+  regions:{
+    Aviation:  '#3E7CA6',
+    Education: '#7A4FBF'
+  },
+
   hub:{
     name:'Central Governance',
     org:'Galaxy Global TMO',
@@ -597,7 +601,7 @@ const MODEL = {
       link:{status:'unknown', label:'To confirm'}
     },
     {
-      id:'vsc', name:'Victoria School', accent:'#7A4FBF', side:'right',
+      id:'vsc', name:'Victoria School', accent:'#7A4FBF', side:'right', region:'Education',
       owner:'IT / Data Team · Head of Data / IT · Admin Team',
       platform:'Victoria Enterprise Data Platform',
       surveyed:true,
@@ -645,6 +649,11 @@ const MODEL = {
     // Named but not yet surveyed. Fill in `tiers` and drop `placeholder` to turn one of
     // these into a full card — nothing else needs to change.
     {
+      id:'vac', name:'Victoria Aviation Academy', accent:'#0E7C7B', side:'right', region:'Education',
+      placeholder:true,
+      hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
+    },
+    {
       id:'neo', name:'Airport NEO', accent:'#00A0E3', side:'left', region:'Aviation', placeholder:true,
       hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
     },
@@ -684,6 +693,13 @@ const CROSS   = 'M18 6L6 18M6 6l12 12';
 
 /* ══════════════════════════════ HELPERS ══════════════════════════════ */
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* Region fills are derived from one hex per region rather than hand-written rgba strings,
+   so a region's border, wash and label pill can never drift out of the same hue. */
+const rgba = (hex, a) => {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n >> 16 & 255}, ${n >> 8 & 255}, ${n & 255}, ${a})`;
+};
 const ico = (d, cls='') =>
   `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor"
     stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
@@ -962,11 +978,15 @@ function layout() {
 
   canvas.querySelectorAll('.region').forEach(n => n.remove());
   [...cl.regions, ...cr.regions].forEach(r => {
+    const c = MODEL.regions[r.label] || '#5B6478';
     const d = document.createElement('div');
     d.className = 'region';
-    Object.assign(d.style, {left:r.x + 'px', top:r.y + 'px', width:r.w + 'px', height:r.h + 'px'});
-    d.innerHTML = `<div class="region-label"><i></i>${esc(r.label)}
-      <span>· ${r.count} ${r.count === 1 ? 'entity' : 'entities'}</span></div>`;
+    Object.assign(d.style, {
+      left:r.x + 'px', top:r.y + 'px', width:r.w + 'px', height:r.h + 'px',
+      borderColor:rgba(c, .42), background:rgba(c, .10)
+    });
+    d.innerHTML = `<div class="region-label" style="background:${c}">${esc(r.label)}
+      <span>${r.count} ${r.count === 1 ? 'entity' : 'entities'}</span></div>`;
     canvas.appendChild(d);
   });
 

@@ -92,17 +92,26 @@ left/right and extend the canvas downward.
 ### Regions
 
 An entity may declare a `region`. Consecutive entities in the same column sharing one region are
-wrapped in a single labelled box — a solid neutral border with a light tint and a label reading
-`AVIATION · 2 entities`. The border is **solid on purpose**: dashed already means "unconfirmed"
-everywhere else on this page, so a dashed container would read as a status rather than a grouping.
+wrapped in a single labelled box. The border is **solid on purpose**: dashed already means
+"unconfirmed" everywhere else on this page, so a dashed container would read as a status rather
+than a grouping.
+
+**Each region carries its own hue**, declared once in `MODEL.regions` and applied to the border
+(42% alpha), the wash (10%) and a solid label pill in white text. A first attempt used one faint
+neutral grey for all regions; it was too quiet to find on a canvas this size, and two regions in
+the same grey would have read as one repeated block. Hues avoid the tier-status palette — teal
+live, blue POC, amber partial, magenta planned — so a region wash never reads as a status:
+
+| Region | Hue | Members |
+|---|---|---|
+| Aviation | `#3E7CA6` | VietJet Air, VietJet Cargo, Airport NEO, VietJet MRO |
+| Education | `#7A4FBF` | Victoria School, Victoria Aviation Academy |
 
 The run has to be contiguous within its column; that constraint is what lets the box stay one
-rectangle rather than needing a path around scattered members. Regions sit at `z-index: 1`, behind
-the spokes and cards, so a spoke leaving a card inside a region crosses the region border cleanly.
-
-One region exists: **Aviation**, holding VietJet Air, VietJet Cargo, Airport NEO and VietJet MRO —
-the whole aviation line, not just the two airline entities. Because members must be contiguous in
-one column, all four sit in the left column and Victoria School moved to the right.
+rectangle rather than needing a path around scattered members. It also means **region membership
+decides which column an entity lands in** — Aviation fills the left column, Education sits on the
+right. Regions sit at `z-index: 1`, behind the spokes and cards, so a spoke leaving a card inside a
+region crosses the region border cleanly.
 
 That leaves the columns very uneven — an Aviation block of roughly 1,800px against 2,700px of
 individual entities. **The shorter column is therefore centred vertically against the taller one.**
