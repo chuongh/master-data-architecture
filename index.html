@@ -466,8 +466,9 @@ const MODEL = {
   // One hue per region. Chosen to avoid the tier-status palette (teal live, blue POC,
   // amber partial, magenta planned) so a region wash never reads as a status.
   regions:{
-    Aviation:  '#3E7CA6',
-    Education: '#7A4FBF'
+    Aviation:              '#3E7CA6',
+    Education:             '#7A4FBF',
+    'Finance & Banking':   '#1F6B4A'
   },
 
   hub:{
@@ -543,7 +544,17 @@ const MODEL = {
       link:{status:'unknown', label:'To confirm'}
     },
     {
-      id:'hds', name:'HDSaison', accent:'#0000F5', side:'right',
+      id:'hdb', name:'HDBank', accent:'#C8102E', side:'right', region:'Finance & Banking',
+      placeholder:true,
+      hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
+    },
+    {
+      id:'vik', name:'Vikki Bank', accent:'#A66A00', side:'right', region:'Finance & Banking',
+      placeholder:true,
+      hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
+    },
+    {
+      id:'hds', name:'HDSaison', accent:'#0000F5', side:'right', region:'Finance & Banking',
       owner:'Owner not surveyed',
       tiers:{
         sources:{
@@ -573,7 +584,7 @@ const MODEL = {
       link:{status:'unknown', label:'To confirm'}
     },
     {
-      id:'gal', name:'Galaxy', accent:'#BE3C8E', side:'right',
+      id:'gal', name:'Galaxy', accent:'#BE3C8E', side:'left',
       owner:'Owner not surveyed',
       tiers:{
         sources:{
@@ -929,6 +940,21 @@ function layout() {
   const colRX = colCX + L.hubW + L.gapX;
   CW = colRX + L.cardW + L.pad;
 
+  /* Region members have to end up adjacent for the box to be one rectangle, but requiring
+     them to be adjacent in MODEL.entities is a trap — adding an entity to an existing region
+     would mean moving its object in the array. Instead the column is re-ordered here: each
+     region collects its members at the position where the region first appears, and
+     ungrouped entities keep their own place. Declaration order in MODEL stays free. */
+  const columnOrder = list => {
+    const out = [], buckets = new Map();
+    list.forEach(e => {
+      if (!e.region) { out.push(e); return; }
+      if (!buckets.has(e.region)) { buckets.set(e.region, []); out.push(buckets.get(e.region)); }
+      buckets.get(e.region).push(e);
+    });
+    return out.flat();
+  };
+
   const card = (e, x, y) => {
     const el = nodeEl(e.id);
     el.style.width = L.cardW + 'px';
@@ -971,7 +997,7 @@ function layout() {
     regions.forEach(r => { r.y += dy; });
   };
 
-  const cl = place(left, colLX), cr = place(right, colRX);
+  const cl = place(columnOrder(left), colLX), cr = place(columnOrder(right), colRX);
   const contentBottom = Math.max(cl.bottom, cr.bottom);
   shift(left,  cl.regions, (contentBottom - cl.bottom) / 2);
   shift(right, cr.regions, (contentBottom - cr.bottom) / 2);

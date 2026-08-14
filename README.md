@@ -21,16 +21,18 @@ of each tier in that order, so you can see where data stops moving.
 |---|---|---|---|
 | Victoria School | Education | Products on a POC lake | Own inventory |
 | VietJet Cargo | Aviation | Sources only — no lake, nothing modelled | Own inventory |
-| HDSaison | — | Lakehouse ready | Source deck — **unverified** |
+| HDSaison | Finance & Banking | Lakehouse ready | Source deck — **unverified** |
 | VietJet Air | Aviation | Lakehouse in progress | Source deck — **unverified** |
 | Galaxy | — | Ladder gap — catalog over a relational database | Source deck — **unverified** |
+| HDBank | Finance & Banking | Not surveyed | Content to follow |
+| Vikki Bank | Finance & Banking | Not surveyed | Content to follow |
 | Airport NEO | Aviation | Not surveyed | Content to follow |
 | VietJet MRO | Aviation | Not surveyed | Content to follow |
 | Victoria Aviation Academy | Education | Not surveyed | Content to follow |
 
-Two region boxes group the business lines: **Aviation** (4) down the left column and **Education**
-(2) on the right, each with its own colour. Region members must be contiguous within a column, so
-membership decides which column an entity lands in.
+Three coloured region boxes group the business lines — **Aviation** (4) down the left column,
+**Finance & Banking** (3) and **Education** (2) on the right. Galaxy sits outside any region.
+Region members are drawn adjacent, so membership decides where an entity lands.
 
 A tier can be live while the tier below it is empty. That inversion is the point of the map, not a
 rendering fault, so the meter shows each tier's own state rather than one averaged score.

@@ -105,13 +105,22 @@ live, blue POC, amber partial, magenta planned — so a region wash never reads 
 | Region | Hue | Members |
 |---|---|---|
 | Aviation | `#3E7CA6` | VietJet Air, VietJet Cargo, Airport NEO, VietJet MRO |
+| Finance & Banking | `#1F6B4A` | HDBank, Vikki Bank, HDSaison |
 | Education | `#7A4FBF` | Victoria School, Victoria Aviation Academy |
 
-The run has to be contiguous within its column; that constraint is what lets the box stay one
-rectangle rather than needing a path around scattered members. It also means **region membership
-decides which column an entity lands in** — Aviation fills the left column, Education sits on the
-right. Regions sit at `z-index: 1`, behind the spokes and cards, so a spoke leaving a card inside a
-region crosses the region border cleanly.
+Members must end up **adjacent** for the box to be one rectangle rather than a path around
+scattered cards. Requiring them to be adjacent in `MODEL.entities` would have been a trap — adding
+an entity to an existing region would mean moving its object in the array — so the column is
+re-ordered at layout time instead: each region collects its members at the position where that
+region first appears, and ungrouped entities keep their own place. Declaration order in the model
+stays free.
+
+Region membership therefore decides which **column** an entity lands in. Aviation fills the left
+column, Finance & Banking and Education share the right, and Galaxy — in no region — sits under
+Aviation to keep the two columns near the same height.
+
+Regions sit at `z-index: 1`, behind the spokes and cards, so a spoke leaving a card inside a region
+crosses the region border cleanly.
 
 That leaves the columns very uneven — an Aviation block of roughly 1,800px against 2,700px of
 individual entities. **The shorter column is therefore centred vertically against the taller one.**
