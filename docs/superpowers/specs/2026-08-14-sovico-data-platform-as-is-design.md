@@ -89,18 +89,60 @@ three-column arrangement that mirrors the slide:
 The hub is vertically centred against the full stack of entity cards. New entities alternate
 left/right and extend the canvas downward.
 
-### Entity card
+### Entity card — the three-tier readiness ladder
 
-Each card follows the Galaxy deck card language — `border-radius`, white fill, 2px border in the
-entity's accent colour — and contains three stacked blocks:
+Revised 2026-08-14 after the first review. The card no longer lists services by function
+(ingestion / storage / governance / consumption); it stacks the three tiers data actually passes
+through, so the card answers *where is the data and how far has it got*:
 
-1. **Header** — entity name in the accent colour, AWS badge, and a status chip:
-   `Data lake live` / `Database only` / `Not surveyed`
-2. **Source systems** — chips, one per system, typed by icon (OLTP, ERP, CRM, file/SFTP, API,
-   stream). Seeded by industry and all marked *to confirm*.
-3. **Platform** — mutually exclusive: a **Data Lake** node (S3 + open table format + its AWS
-   services) or a **Database / warehouse** node. Followed by the consumption services, or an
-   explicit "No consumption layer identified" when the slide shows none.
+1. **Header** — entity name in the accent colour, AWS badge, the owner line, and a
+   **three-segment readiness meter**, one segment per tier in order, each coloured by that tier's
+   own status.
+2. **① Source systems** — chips, one per system, typed by icon (OLTP, ERP, CRM, file, API, stream),
+   each with a small kind caption. Dashed until confirmed.
+3. **② Data lake** — the raw landing tier: object storage plus the ingestion mechanism.
+4. **③ Lakehouse** — open table format, catalog, governance, query engines, business domains, and
+   the **data products** hanging off the end.
+
+Each tier band carries its own status — `Live` · `Partial` · `Planned` · `Not built` ·
+`Not surveyed` — rendered as a tinted band (teal / amber) or a dashed outline, and its own owner
+line. A tier with nothing in it shows `?` and the reason.
+
+**The meter is deliberately not one cumulative score.** A tier can be live while the tier below it
+is empty, and that inversion is the most valuable thing on the page. The header label names the
+pattern instead of averaging it away:
+
+| Condition | Label |
+|---|---|
+| lake live + lakehouse live + products | `Products live` |
+| lake live + lakehouse live | `Lakehouse ready` |
+| lake live only | `Lake only` |
+| lakehouse live or partial **without** a live lake | `Ladder gap` |
+| otherwise | `Sources only` |
+
+A `Ladder gap` card also renders an explicit magenta flag naming the inversion. Two entities hit it:
+VietJet Cargo runs Athena, Redshift and SageMaker with no identified lake beneath them; Galaxy has
+Lake Formation and Glue Data Catalog registered over a relational database.
+
+Tier assignment for the four deck-derived entities is **our reading** of a flat service list — the
+slide does not label tiers. The mapping used: object storage and ingestion → lake; open table
+format, catalog, governance and engines → lakehouse. This is stated on the page itself.
+
+### Victoria School — the worked example
+
+Added as the fifth entity and the design sample, sourced from the entity's own inventory rather
+than the deck, which is why it is the only card with confirmed source systems and per-tier owners:
+
+| Tier | Asset | Owner |
+|---|---|---|
+| Sources | HubSpot (CRM), PowerSchool (SIS), Victoria Portal, Dashboard Postgres | IT Team · App Owners · System Admins |
+| Lake | AWS S3 Landing & RAW, Hanoi Local Zone · Ingestion ECS · Security KMS/IAM | IT / Data Team · Data Engineering · AWS IAM / Data Ops |
+| Lakehouse | Victoria CORE & Business Marts · Admissions, Enrollment, Tuition, Feedback · Glue, Athena, Glue Data Catalog · Airflow | IT / Data Team · Lead Data Architect |
+| Products | BOD Executive Dashboard, Admissions Funnel, Enrollment Overview, Tuition Collection | Executive / Operations · BOD / Domain Leads · Dashboard Admin |
+
+Its `Data Platform` row from the source table (Victoria Enterprise Data Platform) is not a tier —
+it is the capability spine running through all three — so it renders as a caption on the card
+header rather than a band of its own.
 
 ### Spokes
 
