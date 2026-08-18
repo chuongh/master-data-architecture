@@ -487,14 +487,13 @@ const MODEL = {
       owner:'Owner not surveyed',
       tiers:{
         sources:{
-          status:'live',
+          status:'unknown',
           items:[
-            {label:'AMOS',      kind:'MRO / Maintenance',  type:'erp',  confirmed:true,  owner:'ICT Director', admin:'Nguyễn Thanh Hùng'},
-            {label:'AIMS',      kind:'Crew / Ops',         type:'oltp', confirmed:true,  owner:'ICT Director', admin:'Trần Phước Duy · Nguyễn Thanh Hùng'},
-            {label:'CDP',       kind:'CDP / Customer',     type:'crm',  confirmed:true,  owner:'ICT Director', admin:'Marketing Dept.'},
-            {label:'iPort',     kind:'Airport / file',     type:'file', confirmed:true,  owner:'ICT Director', admin:'Hồ Duy Minh'},
-            {label:'Intelisys', kind:'Retail / ancillary', type:'oltp', confirmed:true,  owner:'ICT Director', admin:'Trần Phước Duy · Nguyễn Thanh Hùng'},
-            {label:'SAP',       kind:'ERP · Finance',      type:'erp',  confirmed:false, owner:'To confirm',   admin:'To confirm'}
+            {label:'PSS / Reservation',    kind:'Reservation', type:'oltp',   confirmed:false},
+            {label:'Departure control',    kind:'DCS',         type:'oltp',   confirmed:false},
+            {label:'Loyalty programme',    kind:'CRM',         type:'crm',    confirmed:false},
+            {label:'Web & app clickstream',kind:'Event',       type:'stream', confirmed:false},
+            {label:'Revenue accounting',   kind:'ERP',         type:'erp',    confirmed:false}
           ]
         },
         lake:{
@@ -603,21 +602,26 @@ const MODEL = {
         sources:{
           status:'live',
           items:[
-            {label:'HD Advisor · HDwork · HD Invest', kind:'Trading & advisory apps', type:'api',    confirmed:true, owner:'Head of IT', admin:'Hồ Văn Nhật'},
-            {label:'Firebase tracking',               kind:'Event / clickstream',    type:'stream', confirmed:true, owner:'Head of IT', admin:'Hồ Văn Nhật'},
-            {label:'CSV extracts & system logs',      kind:'File / logs',            type:'file',   confirmed:true, owner:'Head of IT', admin:'Hồ Văn Nhật'}
+            {label:'CSV files',         kind:'File',                type:'file',   confirmed:true, owner:'Head of IT', admin:'Hồ Văn Nhật'},
+            {label:'Firebase tracking', kind:'Event / clickstream', type:'stream', confirmed:true, owner:'Head of IT', admin:'Hồ Văn Nhật'},
+            {label:'Logs',              kind:'Logs',                type:'file',   confirmed:true, owner:'Head of IT', admin:'Hồ Văn Nhật'}
           ]
         },
         lake:{
-          status:'partial', owner:'IT · Head of IT · Hồ Văn Nhật',
-          asset:'Data lake <em>— CSV files + Firebase tracking + logs</em>',
-          note:'Landing raw CSV extracts, Firebase tracking events and application logs. Implementation in progress.'
+          status:'none',
+          empty:'No data lake — raw sources feed the lakehouse platform directly.'
         },
         lakehouse:{
           title:'Lakehouse Platform', status:'partial', owner:'IT · Head of IT · Hồ Văn Nhật',
           asset:'PostgreSQL + Apache Iceberg + MinIO',
-          note:'Open-table-format lakehouse (Iceberg on MinIO) being built alongside the live “BOND” PostgreSQL warehouse/mart. Platform implementation in progress.',
-          domains:['Stock','Bond','Fund'], products:[]
+          note:'Open-table-format lakehouse (Iceberg on MinIO) alongside the live “BOND” PostgreSQL warehouse. Platform implementation in progress.',
+          domains:['Stock','Bond','Fund'],
+          products:[
+            {label:'HD Advisor', kind:'Data product'},
+            {label:'HDwork',     kind:'Data product'},
+            {label:'HD Invest',  kind:'Data product'}
+          ],
+          productOwner:'IT · Head of IT · Hồ Văn Nhật'
         }
       },
       link:{status:'unknown', label:'To confirm'}
