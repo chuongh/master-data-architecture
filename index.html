@@ -391,6 +391,11 @@ body{
     <h1 id="h-title"></h1>
     <div class="rule"></div>
     <p id="h-sub"></p>
+    <p class="head-ref" style="margin:8px 0 0;font-size:12.5px">
+      <a href="https://hdbankcomvn-my.sharepoint.com/:x:/r/personal/quanvm2_hdbank_com_vn/_layouts/15/doc2.aspx?sourcedoc=%7BFD035776-751A-4969-93CB-9FC70DFCB234%7D&file=Data%20Assets%20Registry%20v0.2.xlsx&action=default&mobileredirect=true"
+         target="_blank" rel="noopener noreferrer"
+         style="color:#CF2C91;text-decoration:none;font-weight:650">Reference — Data Assets Registry v0.2 ↗</a>
+    </p>
   </div>
   <div class="head-side">
     <div class="state-badge">
@@ -553,13 +558,11 @@ const MODEL = {
         },
         lake:{
           status:'live', owner:'IT · Head of IT',
-          asset:'AWS data lake',
-          note:'Recorded as “AWS” in the registry — storage, ingestion and catalog services not yet detailed.'
+          asset:'AWS data lake'
         },
         lakehouse:{
           title:'Data Warehouse / Mart', status:'live', owner:'IT · Head of IT',
           asset:'Oracle <em>— on-premise</em>',
-          note:'Classic on-premise warehouse and mart layer. Domains and data products not yet surveyed.',
           domains:[], products:[]
         }
       },
@@ -582,7 +585,6 @@ const MODEL = {
         lakehouse:{
           title:'Data Warehouse & Marts', status:'live', owner:'IT Center · IT Center BOD',
           asset:'Bank data warehouse & mart layer',
-          note:'Last updated 17/08/26.',
           domains:[],
           products:[
             {label:'DWH',       kind:'Bank Data Warehouse'},
