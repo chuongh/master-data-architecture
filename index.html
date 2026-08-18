@@ -703,12 +703,58 @@ const MODEL = {
       hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
     },
     {
-      id:'neo', name:'Airport NEO', accent:'#00A0E3', side:'left', region:'Aviation', placeholder:true,
-      hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
+      id:'neo', name:'Airport NEO', accent:'#00A0E3', side:'left', region:'Aviation',
+      owner:'FAC · Mr. Cang',
+      surveyed:true,
+      tiers:{
+        sources:{
+          status:'unknown',
+          note:'Survey pending — Dr. Ben to talk to Mr. Cang (FAC). Systems named but ownership/detail unconfirmed.',
+          items:[
+            {label:'Intelisys', kind:'Retail / ancillary', type:'oltp', confirmed:false, owner:'Mr. Cang', admin:'To confirm'},
+            {label:'iPort',     kind:'Airport / file',     type:'file', confirmed:false, owner:'Mr. Cang', admin:'To confirm'},
+            {label:'SAP',       kind:'ERP · Finance',      type:'erp',  confirmed:false, owner:'Mr. Cang', admin:'To confirm'}
+          ]
+        },
+        lake:{
+          status:'none',
+          empty:'No data lake recorded.'
+        },
+        lakehouse:{
+          title:'Data Warehouse / Mart', status:'unknown',
+          asset:'Survey pending <em>— FAC / Mr. Cang</em>',
+          note:'Warehouse / mart layer not yet confirmed (Need Dr. Ben to talk to Mr. Cang).',
+          domains:[],
+          products:[{label:'Flightview', kind:'Data product'}],
+          productOwner:'ICT · Le Hai Binh (owner) · Nguyen Thanh Binh (admin)'
+        }
+      },
+      link:{status:'unknown', label:'To confirm'}
     },
     {
-      id:'mro', name:'VietJet MRO', accent:'#4A6B8A', side:'left', region:'Aviation', placeholder:true,
-      hint:'Source systems, whether raw data lands in a lake, and whether anything is modelled on top.'
+      id:'mro', name:'VietJet MRO', accent:'#4A6B8A', side:'left', region:'Aviation',
+      owner:'Owner not surveyed',
+      surveyed:true,
+      tiers:{
+        sources:{
+          status:'live',
+          note:'Systems named and live; ownership and detail pending — meeting with Mr. Đông (14/08).',
+          items:[
+            {label:'AMOS', kind:'MRO / Maintenance', type:'erp',  confirmed:true, owner:'To confirm', admin:'To confirm'},
+            {label:'AIMS', kind:'Crew / Ops',        type:'oltp', confirmed:true, owner:'To confirm', admin:'To confirm'}
+          ]
+        },
+        lake:{
+          status:'none',
+          empty:'No data lake — does not exist.'
+        },
+        lakehouse:{
+          status:'none',
+          empty:'Nothing modelled on top — does not exist.',
+          domains:[], products:[]
+        }
+      },
+      link:{status:'unknown', label:'To confirm'}
     },
     {
       id:'ph1', name:'Entity', side:'right', placeholder:true,
