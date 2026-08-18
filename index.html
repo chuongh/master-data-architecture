@@ -583,11 +583,14 @@ const MODEL = {
         },
         lakehouse:{
           title:'Data Warehouse & Marts', status:'live', owner:'IT Center · IT Center BOD',
-          asset:'DWH <em>— Bank Data Warehouse</em>',
-          note:'Enterprise warehouse plus MIS-reporting marts. Admin · Vương Tuấn Anh (DWH) · Trương Minh Tâm (Marts). Last updated 17/08/26.',
+          asset:'Bank data warehouse & mart layer',
+          note:'Last updated 17/08/26.',
           domains:[],
-          products:[{label:'MIS Reports', kind:'Reporting mart'}],
-          productOwner:'IT Center · Trương Minh Tâm'
+          products:[
+            {label:'DWH',       kind:'Bank Data Warehouse'},
+            {label:'Data Mart', kind:'Data Marts for MIS Reports'}
+          ],
+          productOwner:'Vương Tuấn Anh (DWH) · Trương Minh Tâm (Data Mart)'
         }
       },
       link:{status:'unknown', label:'To confirm'}
@@ -713,12 +716,12 @@ const MODEL = {
       surveyed:true,
       tiers:{
         sources:{
-          status:'live',
+          status:'unknown',
           note:'Ownership to be confirmed with Mr. Cang (FAC).',
           items:[
-            {label:'Intelisys', kind:'Retail / ancillary', type:'oltp', confirmed:true, owner:'Mr. Cang', admin:'To confirm'},
-            {label:'iPort',     kind:'Airport / file',     type:'file', confirmed:true, owner:'Mr. Cang', admin:'To confirm'},
-            {label:'SAP',       kind:'ERP · Finance',      type:'erp',  confirmed:true, owner:'Mr. Cang', admin:'To confirm'}
+            {label:'Intelisys', kind:'Retail / ancillary', type:'oltp', confirmed:false, owner:'Mr. Cang', admin:'To confirm'},
+            {label:'iPort',     kind:'Airport / file',     type:'file', confirmed:false, owner:'Mr. Cang', admin:'To confirm'},
+            {label:'SAP',       kind:'ERP · Finance',      type:'erp',  confirmed:false, owner:'Mr. Cang', admin:'To confirm'}
           ]
         },
         lake:{
@@ -742,11 +745,11 @@ const MODEL = {
       surveyed:true,
       tiers:{
         sources:{
-          status:'live',
-          note:'Systems named and live; ownership and detail pending — meeting with Mr. Đông (14/08).',
+          status:'unknown',
+          note:'Systems named; ownership and detail pending — meeting with Mr. Đông (14/08).',
           items:[
-            {label:'AMOS', kind:'MRO / Maintenance', type:'erp',  confirmed:true, owner:'To confirm', admin:'To confirm'},
-            {label:'AIMS', kind:'Crew / Ops',        type:'oltp', confirmed:true, owner:'To confirm', admin:'To confirm'}
+            {label:'AMOS', kind:'MRO / Maintenance', type:'erp',  confirmed:false, owner:'To confirm', admin:'To confirm'},
+            {label:'AIMS', kind:'Crew / Ops',        type:'oltp', confirmed:false, owner:'To confirm', admin:'To confirm'}
           ]
         },
         lake:{
