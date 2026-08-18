@@ -487,13 +487,14 @@ const MODEL = {
       owner:'Owner not surveyed',
       tiers:{
         sources:{
-          status:'unknown',
+          status:'live',
           items:[
-            {label:'PSS / Reservation',    kind:'Reservation', type:'oltp',   confirmed:false},
-            {label:'Departure control',    kind:'DCS',         type:'oltp',   confirmed:false},
-            {label:'Loyalty programme',    kind:'CRM',         type:'crm',    confirmed:false},
-            {label:'Web & app clickstream',kind:'Event',       type:'stream', confirmed:false},
-            {label:'Revenue accounting',   kind:'ERP',         type:'erp',    confirmed:false}
+            {label:'AMOS',      kind:'MRO / Maintenance',  type:'erp',  confirmed:true,  owner:'ICT Director', admin:'Nguyễn Thanh Hùng'},
+            {label:'AIMS',      kind:'Crew / Ops',         type:'oltp', confirmed:true,  owner:'ICT Director', admin:'Trần Phước Duy · Nguyễn Thanh Hùng'},
+            {label:'CDP',       kind:'CDP / Customer',     type:'crm',  confirmed:true,  owner:'ICT Director', admin:'Marketing Dept.'},
+            {label:'iPort',     kind:'Airport / file',     type:'file', confirmed:true,  owner:'ICT Director', admin:'Hồ Duy Minh'},
+            {label:'Intelisys', kind:'Retail / ancillary', type:'oltp', confirmed:true,  owner:'ICT Director', admin:'Trần Phước Duy · Nguyễn Thanh Hùng'},
+            {label:'SAP',       kind:'ERP · Finance',      type:'erp',  confirmed:false, owner:'To confirm',   admin:'To confirm'}
           ]
         },
         lake:{
@@ -708,12 +709,12 @@ const MODEL = {
       surveyed:true,
       tiers:{
         sources:{
-          status:'unknown',
-          note:'Survey pending — Dr. Ben to talk to Mr. Cang (FAC). Systems named but ownership/detail unconfirmed.',
+          status:'live',
+          note:'Ownership to be confirmed with Mr. Cang (FAC).',
           items:[
-            {label:'Intelisys', kind:'Retail / ancillary', type:'oltp', confirmed:false, owner:'Mr. Cang', admin:'To confirm'},
-            {label:'iPort',     kind:'Airport / file',     type:'file', confirmed:false, owner:'Mr. Cang', admin:'To confirm'},
-            {label:'SAP',       kind:'ERP · Finance',      type:'erp',  confirmed:false, owner:'Mr. Cang', admin:'To confirm'}
+            {label:'Intelisys', kind:'Retail / ancillary', type:'oltp', confirmed:true, owner:'Mr. Cang', admin:'To confirm'},
+            {label:'iPort',     kind:'Airport / file',     type:'file', confirmed:true, owner:'Mr. Cang', admin:'To confirm'},
+            {label:'SAP',       kind:'ERP · Finance',      type:'erp',  confirmed:true, owner:'Mr. Cang', admin:'To confirm'}
           ]
         },
         lake:{
