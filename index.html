@@ -484,33 +484,31 @@ const MODEL = {
   entities:[
     {
       id:'vja', name:'VietJet Air', accent:'#E4803A', side:'left', region:'Aviation',
-      owner:'Owner not surveyed',
+      owner:'ICT · ICT Director',
       tiers:{
         sources:{
-          status:'unknown',
+          status:'live',
           items:[
-            {label:'PSS / Reservation',    kind:'Reservation', type:'oltp',   confirmed:false},
-            {label:'Departure control',    kind:'DCS',         type:'oltp',   confirmed:false},
-            {label:'Loyalty programme',    kind:'CRM',         type:'crm',    confirmed:false},
-            {label:'Web & app clickstream',kind:'Event',       type:'stream', confirmed:false},
-            {label:'Revenue accounting',   kind:'ERP',         type:'erp',    confirmed:false}
+            {label:'AMOS',      kind:'MRO / Maintenance',  type:'erp',  confirmed:true,  owner:'ICT Director', admin:'Nguyễn Thanh Hùng'},
+            {label:'AIMS',      kind:'Crew / Ops',         type:'oltp', confirmed:true,  owner:'ICT Director', admin:'Trần Phước Duy · Nguyễn Thanh Hùng'},
+            {label:'CDP',       kind:'CDP / Customer',     type:'crm',  confirmed:true,  owner:'ICT Director', admin:'Marketing Dept.'},
+            {label:'iPORT',     kind:'Airport / file',     type:'file', confirmed:true,  owner:'ICT Director', admin:'Hồ Duy Minh'},
+            {label:'Intelisys', kind:'Retail / ancillary', type:'oltp', confirmed:true,  owner:'ICT Director', admin:'Trần Phước Duy · Nguyễn Thanh Hùng'},
+            {label:'SAP',       kind:'ERP',                type:'erp',  confirmed:false, owner:'To confirm',   admin:'To confirm'}
           ]
         },
         lake:{
-          status:'live', owner:'Owner not surveyed',
-          asset:'Amazon S3 object storage',
-          note:'Inferred from the open table format named in the source deck. No zone, region or landing-layout detail available.',
-          panels:[
-            {role:'Ingestion', value:'AWS Glue',  icons:['glue']},
-            {role:'Storage',   value:'Amazon S3', icons:['s3']}
-          ]
+          status:'poc', owner:'ICT · ICT Director',
+          asset:'Databricks <em>— POC</em>',
+          note:'Proof-of-concept data lake on Databricks.'
         },
         lakehouse:{
-          status:'partial', owner:'Owner not surveyed',
-          asset:'Open table format + Glue Data Catalog',
-          note:'Catalog and permissions are in place, but no query engine is named — nothing consumes these tables yet.',
-          services:[{key:'s3',label:'Open table format'},{key:'lakeFormation',label:'AWS Lake Formation'},{key:'glueCatalog',label:'AWS Glue Data Catalog'}],
-          domains:[], products:[]
+          title:'Data products', status:'partial', owner:'Multiple',
+          asset:'No data warehouse / mart',
+          note:'Data Warehouse / Mart: not exist (per registry). One group-wide data product built.',
+          domains:[],
+          products:[{label:'Vividata', kind:'Data product'}],
+          productOwner:'Multiple'
         }
       },
       link:{status:'unknown', label:'To confirm'}
@@ -745,11 +743,11 @@ const MODEL = {
       surveyed:true,
       tiers:{
         sources:{
-          status:'unknown',
-          note:'Systems named; ownership and detail pending — meeting with Mr. Đông (14/08).',
+          status:'live',
+          note:'Both systems Live (per registry). Detail pending — meeting with Mr. Đông (14/08).',
           items:[
-            {label:'AMOS', kind:'MRO / Maintenance', type:'erp',  confirmed:false, owner:'To confirm', admin:'To confirm'},
-            {label:'AIMS', kind:'Crew / Ops',        type:'oltp', confirmed:false, owner:'To confirm', admin:'To confirm'}
+            {label:'AMOS', kind:'MRO / Maintenance', type:'erp',  confirmed:true, owner:'To confirm', admin:'To confirm'},
+            {label:'AIMS', kind:'Crew / Ops',        type:'oltp', confirmed:true, owner:'To confirm', admin:'To confirm'}
           ]
         },
         lake:{
